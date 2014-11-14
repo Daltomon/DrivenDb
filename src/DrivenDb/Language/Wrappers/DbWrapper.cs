@@ -54,21 +54,6 @@ namespace DrivenDb.Wrappers
          return m_Accessor.ReadIdentity<T, K>(key);
       }
 
-      public T ReadIdentity<T, K1, K2>(K1 key1, K2 key2) where T : IDbRecord, new()
-      {
-         return m_Accessor.ReadIdentity<T, K1, K2>(key1, key2);
-      }
-
-      public T ReadIdentity<T, K1, K2, K3>(K1 key1, K2 key2, K3 key3) where T : IDbRecord, new()
-      {
-         return m_Accessor.ReadIdentity<T, K1, K2, K3>(key1, key2, key3);
-      }
-
-      public T ReadIdentity<T, K1, K2, K3, K4>(K1 key1, K2 key2, K3 key3, K4 key4) where T : IDbRecord, new()
-      {
-         return m_Accessor.ReadIdentity<T, K1, K2, K3, K4>(key1, key2, key3, key4);
-      }
-
       public IOnJoiner<P, C> ReadRelated<P, C>(P parent)
          where P : IDbRecord, new()
          where C : IDbRecord, new()
@@ -123,12 +108,12 @@ namespace DrivenDb.Wrappers
          return m_Accessor.CreateScope();
       }
 
-      public void WriteEntity(IDbEntity entity)
+      public void WriteEntity(IDbRecord entity)
       {
          m_Accessor.WriteEntity(entity);
       }
 
-      public void WriteEntities(IEnumerable<IDbEntity> entities)
+      public void WriteEntities(IEnumerable<IDbRecord> entities)
       {
          m_Accessor.WriteEntities(entities);
       }
@@ -177,85 +162,7 @@ namespace DrivenDb.Wrappers
       {
          return m_Accessor.ReadEntities<T1, T2, T3, T4, T5>(query, parameters);
       }
-
-      public DbSet<T1, T2, T3, T4, T5, T6> ReadEntities<T1, T2, T3, T4, T5, T6>(string query, params object[] parameters)
-         where T1 : IDbRecord, new()
-         where T2 : IDbRecord, new()
-         where T3 : IDbRecord, new()
-         where T4 : IDbRecord, new()
-         where T5 : IDbRecord, new()
-         where T6 : IDbRecord, new()
-      {
-         return m_Accessor.ReadEntities<T1, T2, T3, T4, T5, T6>(query, parameters);
-      }
-
-      public DbSet<T1, T2, T3, T4, T5, T6, T7> ReadEntities<T1, T2, T3, T4, T5, T6, T7>(string query, params object[] parameters)
-         where T1 : IDbRecord, new()
-         where T2 : IDbRecord, new()
-         where T3 : IDbRecord, new()
-         where T4 : IDbRecord, new()
-         where T5 : IDbRecord, new()
-         where T6 : IDbRecord, new()
-         where T7 : IDbRecord, new()
-      {
-         return m_Accessor.ReadEntities<T1, T2, T3, T4, T5, T6, T7>(query, parameters);
-      }
-
-      public DbSet<T1, T2, T3, T4, T5, T6, T7, T8> ReadEntities<T1, T2, T3, T4, T5, T6, T7, T8>(string query, params object[] parameters)
-         where T1 : IDbRecord, new()
-         where T2 : IDbRecord, new()
-         where T3 : IDbRecord, new()
-         where T4 : IDbRecord, new()
-         where T5 : IDbRecord, new()
-         where T6 : IDbRecord, new()
-         where T7 : IDbRecord, new()
-         where T8 : IDbRecord, new()
-      {
-         return m_Accessor.ReadEntities<T1, T2, T3, T4, T5, T6, T7, T8>(query, parameters);
-      }
-
-      public DbSet<T1, T2, T3, T4, T5, T6, T7, T8, T9> ReadEntities<T1, T2, T3, T4, T5, T6, T7, T8, T9>(string query, params object[] parameters)
-         where T1 : IDbRecord, new()
-         where T2 : IDbRecord, new()
-         where T3 : IDbRecord, new()
-         where T4 : IDbRecord, new()
-         where T5 : IDbRecord, new()
-         where T6 : IDbRecord, new()
-         where T7 : IDbRecord, new()
-         where T8 : IDbRecord, new()
-         where T9 : IDbRecord, new()
-      {
-         return m_Accessor.ReadEntities<T1, T2, T3, T4, T5, T6, T7, T8, T9>(query, parameters);
-      }
-
-      public DbSet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ReadEntities<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(string query, params object[] parameters)
-         where T1 : IDbRecord, new()
-         where T2 : IDbRecord, new()
-         where T3 : IDbRecord, new()
-         where T4 : IDbRecord, new()
-         where T5 : IDbRecord, new()
-         where T6 : IDbRecord, new()
-         where T7 : IDbRecord, new()
-         where T8 : IDbRecord, new()
-         where T9 : IDbRecord, new()
-         where T10 : IDbRecord, new()
-      {
-         return m_Accessor.ReadEntities<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(query, parameters);
-      }
-
-      public IParallelAccessor Parallel
-      {
-         get { return m_Accessor.Parallel; }
-         // ReSharper disable ValueParameterNotUsed
-         private set { }
-         // ReSharper restore ValueParameterNotUsed
-      }
-
-      IParallelAccessorSlim IDbAccessorSlim.Parallel
-      {
-         get { return Parallel; }
-      }
-
+      
       public IFallbackAccessorSlim Fallback
       {
          get { return m_Accessor.Fallback; }

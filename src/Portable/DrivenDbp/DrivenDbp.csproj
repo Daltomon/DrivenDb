@@ -43,6 +43,9 @@
     <None Include="DrivenDb.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\DrivenDb\Language\AttributeHelper.cs">
+      <Link>Language\AttributeHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\DrivenDb\Language\Attributes\DbColumnAttribute.cs">
       <Link>Language\Attributes\DbColumnAttribute.cs</Link>
     </Compile>
@@ -63,9 +66,6 @@
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Extensions.cs">
       <Link>Language\Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Interfaces\IDbEntity.cs">
-      <Link>Language\Interfaces\IDbEntity.cs</Link>
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Interfaces\IDbRecord.cs">
       <Link>Language\Interfaces\IDbRecord.cs</Link>

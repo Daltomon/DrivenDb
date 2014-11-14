@@ -75,12 +75,12 @@ namespace DrivenDb.Utility
 
       public bool GetBoolean(int i)
       {
-         return Convert.ToBoolean(m_Values[i]);
+         return (bool) m_Values[i];
       }
 
       public byte GetByte(int i)
       {
-         return Convert.ToByte(m_Values[i]);
+         return (byte) m_Values[i];
       }
 
       public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
@@ -90,7 +90,7 @@ namespace DrivenDb.Utility
 
       public char GetChar(int i)
       {
-         return Convert.ToChar(m_Values[i]);
+         return (char) m_Values[i];
       }
 
       public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
@@ -105,42 +105,42 @@ namespace DrivenDb.Utility
 
       public short GetInt16(int i)
       {
-         return Convert.ToInt16(m_Values[i]);
+         return (short) m_Values[i];
       }
 
       public int GetInt32(int i)
       {
-         return Convert.ToInt32(m_Values[i]);
+         return (int) m_Values[i];
       }
 
       public long GetInt64(int i)
       {
-         return Convert.ToInt64(m_Values[i]);
+         return (long) m_Values[i];
       }
 
       public float GetFloat(int i)
       {
-         return Convert.ToSingle(m_Values[i]);
+         return (float) m_Values[i];
       }
 
       public double GetDouble(int i)
       {
-         return Convert.ToDouble(m_Values[i]);
+         return (double) m_Values[i];
       }
 
       public string GetString(int i)
       {
-         return Convert.ToString(m_Values[i]);
+         return (string) m_Values[i];
       }
 
       public decimal GetDecimal(int i)
       {
-         return Convert.ToDecimal(m_Values[i]);
+         return (decimal) m_Values[i];
       }
 
       public DateTime GetDateTime(int i)
       {
-         return Convert.ToDateTime(m_Values[i]);
+         return (DateTime) m_Values[i];
       }
 
       public IDataReader GetData(int i)

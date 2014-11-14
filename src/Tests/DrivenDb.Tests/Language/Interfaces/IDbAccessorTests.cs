@@ -23,13 +23,13 @@ namespace DrivenDb.Tests.Language.Interfaces
             .Select(t => t.ToNew())
             .First();
 
-         record.Entity.Delete();
+         record.Delete();
 
-         Assert.True(record.Entity.State == EntityState.Deleted);
+         Assert.True(record.AsRecord().State == EntityState.Deleted);
 
-         record.Entity.Undelete();
+         record.Undelete();
 
-         Assert.True(record.Entity.State == EntityState.New);
+         Assert.True(record.AsRecord().State == EntityState.New);
 
          DestroyAccessor(key);
       }
@@ -43,13 +43,13 @@ namespace DrivenDb.Tests.Language.Interfaces
          var record = accessor.ReadEntities<MyTable>(@"SELECT * FROM MyTable")
             .First();
 
-         record.Entity.Delete();
+         record.Delete();
 
-         Assert.True(record.Entity.State == EntityState.Deleted);
+         Assert.True(record.AsRecord().State == EntityState.Deleted);
 
-         record.Entity.Undelete();
+         record.Undelete();
 
-         Assert.True(record.Entity.State == EntityState.Current);
+         Assert.True(record.AsRecord().State == EntityState.Current);
 
          DestroyAccessor(key);
       }
@@ -64,13 +64,13 @@ namespace DrivenDb.Tests.Language.Interfaces
             .Select(t => t.ToUpdate())
             .First();
 
-         record.Entity.Delete();
+         record.Delete();
 
-         Assert.True(record.Entity.State == EntityState.Deleted);
+         Assert.True(record.AsRecord().State == EntityState.Deleted);
 
-         record.Entity.Undelete();
+         record.Undelete();
 
-         Assert.True(record.Entity.State == EntityState.Modified);
+         Assert.True(record.AsRecord().State == EntityState.Modified);
 
          DestroyAccessor(key);
       }
@@ -183,7 +183,7 @@ namespace DrivenDb.Tests.Language.Interfaces
          entity.MyString = "100";
          entity.PartialValue = 100;
 
-         Assert.False(entity.Entity.Changes.Contains("PartialValue"));
+         Assert.False(entity.AsRecord().Changes.Contains("PartialValue"));
          Assert.DoesNotThrow(() =>
             accessor.WriteEntity(entity)
             );
@@ -256,7 +256,7 @@ namespace DrivenDb.Tests.Language.Interfaces
 
          try
          {
-            using (var scope = new TransactionScope())
+            using (new TransactionScope())
             {
                accessor.Execute("UPDATE MyTable SET MyString = 'testeroo'");
                //accessor.Execute("UPDATE MyTable SET MyNumber = 555");  // causes the sqlite database to be locked, i don't understand this yet
@@ -333,41 +333,7 @@ namespace DrivenDb.Tests.Language.Interfaces
 
          DestroyAccessor(key);
       }
-
-      //[Fact]
-      //public void InsertEntitiesWithoutReturnIdTest()
-      //{
-      //   string key;
-
-      //   var accessor = CreateAccessor(out key);
-      //   var gnu4 = new MyTable()
-      //      {
-      //         MyNumber = 4,
-      //         MyString = "Four"
-      //      };
-      //   var gnu5 = new MyTable()
-      //      {
-      //         MyNumber = 5,
-      //         MyString = "Five"
-      //      };
-      //   var gnu6 = new MyTable()
-      //      {
-      //         MyNumber = 6,
-      //         MyString = "Six"
-      //      };
-
-      //   accessor.WriteEntities(new[] { gnu4, gnu5, gnu6 }, false);
-
-      //   Assert.True(gnu4.MyIdentity == 0);
-      //   Assert.True(gnu4.Entity.State == EntityState.New);
-      //   Assert.True(gnu5.MyIdentity == 0);
-      //   Assert.True(gnu5.Entity.State == EntityState.New);
-      //   Assert.True(gnu6.MyIdentity == 0);
-      //   Assert.True(gnu6.Entity.State == EntityState.New);
-
-      //   DestroyAccessor(key);
-      //}
-
+      
       [Fact]
       public void ReadEntitiesTest()
       {
@@ -375,29 +341,6 @@ namespace DrivenDb.Tests.Language.Interfaces
 
          var accessor = CreateAccessor(out key);
          var entities = accessor.ReadEntities<MyTable>("SELECT * FROM MyTable")
-            .ToArray();
-
-         Assert.True(entities.Length == 3);
-         Assert.True(entities[0].MyIdentity == 1);
-         Assert.True(entities[0].MyNumber == 1);
-         Assert.True(entities[0].MyString == "One");
-         Assert.True(entities[1].MyIdentity == 2);
-         Assert.True(entities[1].MyNumber == 2);
-         Assert.True(entities[1].MyString == "Two");
-         Assert.True(entities[2].MyIdentity == 3);
-         Assert.True(entities[2].MyNumber == 3);
-         Assert.True(entities[2].MyString == "Three");
-
-         DestroyAccessor(key);
-      }
-
-      [Fact]
-      public void ParallelReadEntitiesTest()
-      {
-         string key;
-
-         var accessor = CreateAccessor(out key);
-         var entities = accessor.Parallel.ReadEntities<MyTable>("SELECT * FROM MyTable")
             .ToArray();
 
          Assert.True(entities.Length == 3);
@@ -504,11 +447,11 @@ namespace DrivenDb.Tests.Language.Interfaces
          accessor.WriteEntities(new[] { gnu4, gnu5, gnu6 });
 
          Assert.True(gnu4.MyIdentity == 4);
-         Assert.True(gnu4.Entity.State == EntityState.Current);
+         Assert.True(gnu4.AsRecord().State == EntityState.Current);
          Assert.True(gnu5.MyIdentity == 5);
-         Assert.True(gnu5.Entity.State == EntityState.Current);
+         Assert.True(gnu5.AsRecord().State == EntityState.Current);
          Assert.True(gnu6.MyIdentity == 6);
-         Assert.True(gnu6.Entity.State == EntityState.Current);
+         Assert.True(gnu6.AsRecord().State == EntityState.Current);
 
          DestroyAccessor(key);
       }
@@ -554,14 +497,14 @@ namespace DrivenDb.Tests.Language.Interfaces
                Assert.True(changes[2].AffectedColumns == null);
             };
 
-         accessor.WriteEntities(new IDbEntity[] { gnu4, gnu5, gnu6 });
+         accessor.WriteEntities(new IDbRecord[] { gnu4, gnu5, gnu6 });
 
          Assert.True(gnu4.MyIdentity == 4);
-         Assert.True(gnu4.Entity.State == EntityState.Current);
+         Assert.True(gnu4.AsRecord().State == EntityState.Current);
          Assert.True(gnu5.MyIdentity == 5);
-         Assert.True(gnu5.Entity.State == EntityState.Current);
+         Assert.True(gnu5.AsRecord().State == EntityState.Current);
          Assert.True(gnu6.MyIdentity == 6);
-         Assert.True(gnu6.Entity.State == EntityState.Current);
+         Assert.True(gnu6.AsRecord().State == EntityState.Current);
 
          DestroyAccessor(key);
       }
@@ -578,7 +521,7 @@ namespace DrivenDb.Tests.Language.Interfaces
 
          Assert.True(entities.Length == 3);
 
-         entities[1].Entity.Delete();
+         entities[1].Delete();
 
          accessor.Deleted += (s, a) =>
             {
@@ -593,7 +536,7 @@ namespace DrivenDb.Tests.Language.Interfaces
 
          accessor.WriteEntities(entities);
 
-         Assert.True(entities[1].Entity.State == EntityState.Deleted);
+         Assert.True(entities[1].AsRecord().State == EntityState.Deleted);
 
          entities = accessor.ReadEntities<MyTable>("SELECT * FROM MyTable")
             .OrderBy(e => e.MyNumber)
@@ -693,7 +636,7 @@ namespace DrivenDb.Tests.Language.Interfaces
             .OrderBy(e => e.MyNumber)
             .ToArray();
 
-         entities[1].Entity.Delete();
+         entities[1].Delete();
          entities[2].MyString = "Three Three Three";
 
          using (var memory = new MemoryStream())
@@ -705,10 +648,10 @@ namespace DrivenDb.Tests.Language.Interfaces
             var hydrated = DeserializeDataContractXml<MyTable[]>(memory);
 
             Assert.True(hydrated.Length == 3);
-            Assert.True(hydrated[0].Entity.State == EntityState.Current);
-            Assert.True(hydrated[1].Entity.State == EntityState.Deleted);
-            Assert.True(hydrated[2].Entity.State == EntityState.Modified);
-            Assert.True(hydrated[2].Entity.Changes.Contains("MyString"));
+            Assert.True(hydrated[0].AsRecord().State == EntityState.Current);
+            Assert.True(hydrated[1].AsRecord().State == EntityState.Deleted);
+            Assert.True(hydrated[2].AsRecord().State == EntityState.Modified);
+            Assert.True(hydrated[2].AsRecord().Changes.Contains("MyString"));
             Assert.True(hydrated[2].MyString == "Three Three Three");
          }
 
@@ -802,7 +745,7 @@ namespace DrivenDb.Tests.Language.Interfaces
                MyString = "Two"
             };
 
-         accessor.WriteEntities(new IDbEntity[] { gnutable1, gnufriend1, gnutable2, gnufriend2 });
+         accessor.WriteEntities(new IDbRecord[] { gnutable1, gnufriend1, gnutable2, gnufriend2 });
 
          Assert.True(gnutable1.MyIdentity == 4);
          Assert.True(gnufriend1.MyIdentity == 1);

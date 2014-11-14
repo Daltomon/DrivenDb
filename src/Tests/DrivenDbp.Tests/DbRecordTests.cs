@@ -13,8 +13,8 @@ namespace DrivenDbp.Tests
       {
          var actual = new ClassB();
 
-         Assert.AreEqual("NumberY", actual.Record.Columns["Number"].Name);
-         Assert.AreEqual("TextY", actual.Record.Columns["Text"].Name);         
+         Assert.AreEqual("NumberY", actual.AsRecord().Columns["Number"].Name);
+         Assert.AreEqual("TextY", actual.AsRecord().Columns["Text"].Name);         
       }
 
       [TestMethod]
@@ -22,8 +22,8 @@ namespace DrivenDbp.Tests
       {
          var actual = new ClassB();
 
-         Assert.IsTrue(actual.Record.Table.Schema == "yyy");
-         Assert.IsTrue(actual.Record.Table.Name == "ClassY");
+         Assert.IsTrue(actual.AsRecord().Table.Schema == "yyy");
+         Assert.IsTrue(actual.AsRecord().Table.Name == "ClassY");
       }
 
       [TestMethod]
@@ -31,8 +31,8 @@ namespace DrivenDbp.Tests
       {
          var actual = new ClassA();
 
-         Assert.IsTrue(actual.Record.Table.Schema == "dbo");
-         Assert.IsTrue(actual.Record.Table.Name == "ClassA");         
+         Assert.IsTrue(actual.AsRecord().Table.Schema == "dbo");
+         Assert.IsTrue(actual.AsRecord().Table.Name == "ClassA");         
       }
 
       [TestMethod]
@@ -40,12 +40,12 @@ namespace DrivenDbp.Tests
       {
          var actual = new ClassA();
 
-         Assert.IsTrue(actual.Record.Columns.ContainsKey("Number"));
-         Assert.IsTrue(actual.Record.Columns["Number"].IsPrimaryKey);
-         Assert.IsTrue(actual.Record.Columns["Number"].IsDbGenerated);
-         Assert.IsTrue(actual.Record.Columns.ContainsKey("Text"));
-         Assert.IsFalse(actual.Record.Columns["Text"].IsPrimaryKey);
-         Assert.IsFalse(actual.Record.Columns["Text"].IsDbGenerated);
+         Assert.IsTrue(actual.AsRecord().Columns.ContainsKey("Number"));
+         Assert.IsTrue(actual.AsRecord().Columns["Number"].IsPrimaryKey);
+         Assert.IsTrue(actual.AsRecord().Columns["Number"].IsDbGenerated);
+         Assert.IsTrue(actual.AsRecord().Columns.ContainsKey("Text"));
+         Assert.IsFalse(actual.AsRecord().Columns["Text"].IsPrimaryKey);
+         Assert.IsFalse(actual.AsRecord().Columns["Text"].IsDbGenerated);
       }
 
       [Table(Name = "dbo.ClassA")]      

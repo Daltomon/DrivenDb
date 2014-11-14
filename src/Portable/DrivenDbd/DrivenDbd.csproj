@@ -148,12 +148,6 @@
     <Compile Include="..\..\DrivenDb\Language\Interfaces\IOnJoiner.cs">
       <Link>Language\Interfaces\IOnJoiner.cs</Link>
     </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Interfaces\IParallelAccessor.cs">
-      <Link>Language\Interfaces\IParallelAccessor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Interfaces\IParallelAccessorSlim.cs">
-      <Link>Language\Interfaces\IParallelAccessorSlim.cs</Link>
-    </Compile>
     <Compile Include="..\..\DrivenDb\Language\Interfaces\ISqlBuilder.cs">
       <Link>Language\Interfaces\ISqlBuilder.cs</Link>
     </Compile>

@@ -17,9 +17,9 @@ namespace DrivenDb.MsSql
    public interface IMsSqlScope : IDbScope
    {
       void WriteEntityUsingScopeIdentity<T>(T entity)
-         where T : IDbEntity, new();
+         where T : IDbRecord, new();
 
       void WriteEntitiesUsingScopeIdentity<T>(IEnumerable<T> entities)
-         where T : IDbEntity, new();
+         where T : IDbRecord, new();
    }
 }

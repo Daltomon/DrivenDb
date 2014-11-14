@@ -18,74 +18,41 @@ using System.Runtime.Serialization;
 namespace DrivenDb
 {
    [DataContract]
-   public abstract class DbEntity<T> : DbRecord<T>, IDbEntity<T>
-      where T : DbEntity<T>, IDbEntity, INotifyPropertyChanged, new()
+   public abstract class DbEntity<T> : DbRecord<T>
+      where T : DbEntity<T>, IDbRecord, INotifyPropertyChanged, new()
    {
       protected DbEntity()
       {
          Initialize();
       }
 
-      public IDbEntity<T> Entity
-      {
-         get { return this; }
-      }
-
       protected virtual void BeforeSerialization()
       {
-      }
-
-      [OnSerializing]
-      private void OnSerializing(StreamingContext context)
-      {
-         BeforeSerialization();
+         // noop
       }
 
       protected virtual void AfterDeserialization()
       {
+         // noop
       }
 
-      [OnDeserialized]
-      private void OnDeserialized(StreamingContext context)
+      public void Delete()
       {
-         Initialize();
-         AfterDeserialization();
-      }
-
-      private void Initialize()
-      {
-         m_Instance.PropertyChanged += (s, e) =>
-            {
-               if (m_Columns.ContainsKey(e.PropertyName))
-               {
-                  m_Changes.Add(e.PropertyName);
-                  m_LastModified = DateTime.Now;
-
-                  if (m_State != EntityState.New)
-                  {
-                     ChangeState(EntityState.Modified);
-                  }
-               }
-            };
-      }
-
-      void IDbEntity.Delete()
-      {
-         if (m_State != EntityState.Deleted)
+         if (_state != EntityState.Deleted)
          {
-            m_PreDeletedState = m_State;
+            _preDeletedState = _state;
 
             ChangeState(EntityState.Deleted);
          }
       }
 
-      void IDbEntity.Undelete()
+      public void Undelete()
       {
-         if (m_State == EntityState.Deleted)
+         if (_state == EntityState.Deleted)
          {
-            m_State = m_PreDeletedState;
+            _state = _preDeletedState;
 
-            ChangeState(m_PreDeletedState);
+            ChangeState(_preDeletedState);
          }
       }
 
@@ -93,21 +60,21 @@ namespace DrivenDb
       {
          var result = new T();
 
-         result.Update(this.m_Instance); //, false);
+         result.Update(this._instance);
 
-         if (m_IdentityColumn.Value != null)
+         if (_identityColumn.Value != null)
          {
-            var property = m_Accessor.GetPropertyInfo(m_IdentityColumn.Key);
+            var property = _accessor.GetPropertyInfo(_identityColumn.Key);
 
             var value = property.PropertyType.IsValueType
                ? Activator.CreateInstance(property.PropertyType)
                : null;
 
-            result.Entity.SetProperty(m_IdentityColumn.Key, value);
-            result.m_Changes.Remove(m_IdentityColumn.Key);
+            result.SetProperty(_identityColumn.Key, value);
+            result._changes.Remove(_identityColumn.Key);
          }
 
-         result.m_State = EntityState.New;
+         result._state = EntityState.New;
 
          return result;
       }
@@ -116,14 +83,14 @@ namespace DrivenDb
       {
          var result = new T();
 
-         result.Update(this.m_Instance); //, false);
+         result.Update(this._instance);
 
-         if (m_IdentityColumn.Value != null)
+         if (_identityColumn.Value != null)
          {
-            result.m_Changes.Remove(m_IdentityColumn.Key);
+            result._changes.Remove(_identityColumn.Key);
          }
 
-         result.m_State = EntityState.Modified;
+         result._state = EntityState.Modified;
 
          return result;
       }
@@ -145,86 +112,76 @@ namespace DrivenDb
 
          foreach (var target in targets)
          {
-            if (target.CanWrite && m_Accessor.CanReadProperty(target.Name))
+            if (target.CanWrite && _accessor.CanReadProperty(target.Name))
             {
-               target.SetValue(other, m_Accessor.GetPropertyValue<object>(this.m_Instance, target.Name), null);
+               target.SetValue(other, _accessor.GetPropertyValue<object>(this._instance, target.Name), null);
             }
          }
       }
 
-      public void Update(T other) //, bool checkIdentity = true)
-      {
-         //if (checkIdentity && !this.Entity.SameAs(other))
-         //{
-         //   throw new InvalidDataException("Cannot update mismatched records");
-         //}
-
-         var properties = m_Accessor.GetProperties();
+      public void Update(T other)         
+      {         
+         var properties = _accessor.GetProperties();
 
          foreach (var property in properties)
          {
-            if (m_Accessor.CanReadProperty(property.Name)
-               && m_Accessor.CanWriteProperty(property.Name)
+            if (_accessor.CanReadProperty(property.Name)
+               && _accessor.CanWriteProperty(property.Name)
                )
             {
-               Entity.SetProperty(property.Name, other.GetProperty(property.Name));
+               AsRecord().SetProperty(property.Name, other.GetProperty(property.Name));
             }
          }
 
-         m_LastModified = DateTime.Now;
+         _lastModified = DateTime.Now;
       }
 
       public T Clone()
       {
          var result = new T();
-         var properties = m_Accessor.GetProperties();
+         var properties = _accessor.GetProperties();
 
          foreach (var property in properties)
          {
-            if (m_Accessor.CanReadProperty(property.Name)
-               && m_Accessor.CanWriteProperty(property.Name)
+            if (_accessor.CanReadProperty(property.Name)
+               && _accessor.CanWriteProperty(property.Name)
                )
             {
-               var value = m_Accessor.GetPropertyValue<object>(m_Instance, property.Name);
+               var value = _accessor.GetPropertyValue<object>(_instance, property.Name);
 
-               m_Accessor.SetPropertyValue(result, property.Name, value);
+               _accessor.SetPropertyValue(result, property.Name, value);
             }
          }
 
          result.Reset();
 
-         foreach (var change in m_Changes)
+         foreach (var change in _changes)
          {
-            result.m_Changes.Add(change);
+            result._changes.Add(change);
          }
 
-         result.m_LastModified = this.m_LastModified;
-         result.m_LastUpdated = this.m_LastUpdated;
-         result.m_State = this.m_State;
+         result._lastModified = this._lastModified;
+         result._lastUpdated = this._lastUpdated;
+         result._state = this._state;
 
          return result;
       }
 
-      public void Merge(T other) //, bool checkIdentity = true)
-      {
-         //if (checkIdentity && !this.Entity.SameAs(other))
-         //{
-         //   throw new InvalidDataException("Cannot update mismatched records");
-         //}
+      public void Merge(T other) 
+      {         
+         var lastModified = _lastModified;
+         var lastUpdated = _lastUpdated;
+         var changes = new HashSet<string>(_changes);
 
-         var lastModified = m_LastModified;
-         var lastUpdated = m_LastUpdated;
-         var changes = new HashSet<string>(m_Changes);
-
-         if (m_LastUpdated < other.LastUpdated)
+         if (_lastUpdated < other.LastUpdated)
          {
-            var properties = m_Accessor.GetProperties();
+            var properties = _accessor.GetProperties();
 
             foreach (var property in properties)
             {
                if (!changes.Contains(property.Name))
                {
-                  Entity.SetProperty(property.Name, other.GetProperty(property.Name));
+                  AsRecord().SetProperty(property.Name, other.GetProperty(property.Name));
                }
             }
          }
@@ -233,26 +190,56 @@ namespace DrivenDb
          {
             if (!changes.Contains(change))
             {
-               Entity.SetProperty(change, other.GetProperty(change));
+               AsRecord().SetProperty(change, other.GetProperty(change));
                changes.Add(change);
             }
          }
 
-         m_Changes = new HashSet<string>(changes);
+         _changes = new HashSet<string>(changes);
 
          var state = other.State == EntityState.Deleted || other.State == EntityState.Modified
                       ? other.State
-                      : m_State;
+                      : _state;
 
          ChangeState(state);
 
-         m_LastModified = lastModified.HasValue && lastModified > other.LastModified
+         _lastModified = lastModified.HasValue && lastModified > other.LastModified
                              ? lastModified
                              : other.LastModified;
 
-         m_LastUpdated = lastUpdated > other.LastUpdated
+         _lastUpdated = lastUpdated > other.LastUpdated
                             ? lastUpdated
                             : other.LastUpdated;
+      }
+
+      [OnSerializing]
+      private void OnSerializing(StreamingContext context)
+      {
+         BeforeSerialization();
+      }
+
+      [OnDeserialized]
+      private void OnDeserialized(StreamingContext context)
+      {
+         Initialize();
+         AfterDeserialization();
+      }
+
+      private void Initialize()
+      {
+         _instance.PropertyChanged += (s, e) =>
+         {
+            if (_columns.ContainsKey(e.PropertyName))
+            {
+               _changes.Add(e.PropertyName);
+               _lastModified = DateTime.Now;
+
+               if (_state != EntityState.New)
+               {
+                  ChangeState(EntityState.Modified);
+               }
+            }
+         };
       }
    }
 }

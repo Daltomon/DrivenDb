@@ -18,10 +18,10 @@ namespace DrivenDb
    public interface IDbScope : IDisposable
    {
       void WriteEntity<T>(T entity)
-         where T : IDbEntity;
+         where T : IDbRecord;
 
       void WriteEntities<T>(IEnumerable<T> entities)
-         where T : IDbEntity;
+         where T : IDbRecord;
 
       void Commit();
       void Execute(string query, params object[] parameters);

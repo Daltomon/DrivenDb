@@ -26,12 +26,14 @@ namespace DrivenDb.Language.MsSql
          m_Scripter = scripter;
       }
 
-      public void WriteEntityUsingScopeIdentity<T>(T entity) where T : IDbEntity, new()
+      public void WriteEntityUsingScopeIdentity<T>(T entity) 
+         where T : IDbRecord, new()
       {
          WriteEntitiesUsingScopeIdentity(new[] { entity });
       }
 
-      public void WriteEntitiesUsingScopeIdentity<T>(IEnumerable<T> entities) where T : IDbEntity, new()
+      public void WriteEntitiesUsingScopeIdentity<T>(IEnumerable<T> entities) 
+         where T : IDbRecord, new()
       {
          m_Accessor.WriteEntities(m_Connection, m_Transaction, entities,
                        (c, i, e) => m_Scripter.ScriptInsertWithScopeIdentity<T>(c, e, i, true)

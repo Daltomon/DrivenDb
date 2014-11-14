@@ -174,7 +174,7 @@ namespace DrivenDb
          entities[0].MyString = "100";
          entities[1].MyNumber = 200;
          entities[1].MyString = "200";
-         entities[2].Entity.Delete();
+         entities[2].Delete();
 
          var gnu = new MyTable()
             {

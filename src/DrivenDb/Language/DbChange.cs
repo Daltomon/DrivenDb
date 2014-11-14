@@ -18,7 +18,7 @@ namespace DrivenDb
    [DataContract]
    public class DbChange
    {
-      public DbChange(DbChangeType changeType, string affectedTable, IEnumerable<string> affectedColumns, IDbEntity entity)
+      public DbChange(DbChangeType changeType, string affectedTable, IEnumerable<string> affectedColumns, IDbRecord entity)
       {
          ChangeType = changeType;
          AffectedTable = affectedTable;
@@ -47,7 +47,7 @@ namespace DrivenDb
          private set;
       }
 
-      public IDbEntity Entity
+      public IDbRecord Entity
       {
          get;
          private set;

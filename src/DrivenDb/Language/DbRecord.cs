@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using DrivenDb.Utility;
 
@@ -23,87 +22,74 @@ namespace DrivenDb
    public delegate void StateChangedEvent(EntityState previous, EntityState current);
 
    [DataContract]
-   public abstract class DbRecord<T> : IDbRecord //: IDbRecord<T>
+   public abstract class DbRecord<T> : IDbRecord 
       where T : IDbRecord
    {
-      protected static readonly EntityAccessor<T> m_Accessor = new EntityAccessor<T>(true);
-      //private static readonly Func<T, T, int> m_CompareTo;
-      //private static readonly Func<T, T, bool> m_Equals;
-      //private static readonly Func<T, int> m_Hasher;
-      private static readonly bool? m_IsIdentity32;
+      protected static readonly EntityAccessor<T> _accessor = new EntityAccessor<T>(true);      
+      private static readonly bool? _isIdentity32;
 
-      protected static readonly DbTableAttribute m_Table;
-      protected static readonly DbSequenceAttribute m_Sequence;
-      protected static readonly KeyValuePair<string, DbColumnAttribute> m_IdentityColumn;
-      protected static readonly KeyValuePair<string, DbColumnAttribute>[] m_PrimaryColumns;
-      protected static readonly IDictionary<string, DbColumnAttribute> m_Columns;
+      protected static readonly DbTableAttribute _table;
+      protected static readonly DbSequenceAttribute _sequence;
+      protected static readonly KeyValuePair<string, DbColumnAttribute> _identityColumn;
+      protected static readonly KeyValuePair<string, DbColumnAttribute>[] _primaryColumns;
+      protected static readonly IDictionary<string, DbColumnAttribute> _columns;
 
       static DbRecord()
       {
          var type = typeof(T);
 
-         m_Table = GetTableAttribute(type);
-         m_Sequence = GetSequenceAttribute(type);
-         m_Columns = GetColumnAttributes(type);
+         _table = AttributeHelper.GetTableAttribute(type);
+         _sequence = AttributeHelper.GetSequenceAttribute(type);
+         _columns = AttributeHelper.GetColumnAttributes(type);
 
-         m_PrimaryColumns = m_Columns
+         _primaryColumns = _columns
             .Where(c => c.Value.IsPrimaryKey)
             .ToArray();
 
-         m_IdentityColumn = m_Columns
+         _identityColumn = _columns
             .FirstOrDefault(c => c.Value.IsDbGenerated);
 
-         if (m_IdentityColumn.Value != null)
+         if (_identityColumn.Value != null)
          {
-            m_IsIdentity32 = m_Accessor.GetPropertyInfo(m_IdentityColumn.Key).PropertyType == typeof(int);
+            _isIdentity32 = _accessor.GetPropertyInfo(_identityColumn.Key).PropertyType == typeof(int);
          }
-
-         //m_CompareTo = EntityHelper.CompareTo<T>(m_PrimaryColumns.Select(p => p.Key)); // optional case sensitive?
-         //m_Equals = EntityHelper.Equals<T>(m_PrimaryColumns.Select(p => p.Key)); // optional case sensitive?
-         //m_Hasher = EntityHelper.GetHashCode<T>(m_PrimaryColumns.Select(p => p.Key));
       }
 
-      public event StateChangedEvent StateChanged;
+      [DataMember]
+      protected HashSet<string> _changes = new HashSet<string>();
 
       [DataMember]
-      protected HashSet<string> m_Changes = new HashSet<string>();
+      protected DateTime? _lastModified;
 
       [DataMember]
-      protected DateTime? m_LastModified;
+      protected DateTime? _lastUpdated;
 
       [DataMember]
-      protected DateTime? m_LastUpdated;
+      protected EntityState _preDeletedState;
 
       [DataMember]
-      protected EntityState m_PreDeletedState;
+      protected EntityState _state;
 
-      [DataMember]
-      protected EntityState m_State;
-
-      protected T m_Instance;
-      //protected Lazy<int> m_Hash;
-
+      protected T _instance;
+      
       protected DbRecord()
       {
          Initialize();
       }
 
-      public IDbRecord Record
+      protected void ChangeState(EntityState	state)
       {
-         get { return this; }
-      }
+         var previous = _state;
 
-      protected void ChangeState(EntityState state)
-      {
-         var previous = m_State;
-
-         m_State = state;
+         _state = state;
 
          if (previous != state && StateChanged != null)
          {
             StateChanged(previous, state);
          }
       }
+
+      public event StateChangedEvent StateChanged;
 
       [OnDeserialized]
       private void OnDeserialized(StreamingContext context)
@@ -113,112 +99,13 @@ namespace DrivenDb
 
       private void Initialize()
       {
-         m_Instance = (T) (object) this;
-         //m_Hash = new Lazy<int>(() => m_Hasher(m_Instance));
+         _instance = (T) (object) this;
       }
 
-      private static DbTableAttribute GetTableAttribute(Type type)
+      public IDbRecord AsRecord()
       {
-         return type.GetCustomAttributes(true)
-            .Where(a => a.GetType().FullName == "DrivenDb.DbTableAttribute"
-                     || a.GetType().FullName == "System.Data.Linq.Mapping.TableAttribute")
-            .OrderBy(a => a.GetType().FullName)
-            .Select(a =>
-               {
-                  var dbTable = a as DbTableAttribute;
-
-                  if (dbTable != null)
-                  {
-                     return dbTable;
-                  }
-
-                  var nameProperty = a.GetType()
-                     .GetProperty("Name");
-
-                  var schema = default(string);
-                  var name = default(string);
-
-                  if (nameProperty != null)
-                  {
-                     name = (string) nameProperty
-                        .GetGetMethod(true)
-                        .Invoke(a, null);
-
-                     var split = name.Split('.');
-
-                     if (split.Count() == 2)
-                     {
-                        schema = split[0].Replace("[", "").Replace("]", "");
-                        name = split[1].Replace("[", "").Replace("]", "");
-                     }
-                  }
-
-                  return new DbTableAttribute()
-                     {
-                        Schema = schema,
-                        Name = name,
-                     };
-               })
-            .First();
+         return this;
       }
-
-      private static DbSequenceAttribute GetSequenceAttribute(Type type)
-      {
-         return type.GetCustomAttributes(true)
-            .OfType<DbSequenceAttribute>()
-            .SingleOrDefault();
-      }
-
-      private static IDictionary<string, DbColumnAttribute> GetColumnAttributes(Type type)
-      {
-         var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-         var columns = new Dictionary<string, DbColumnAttribute>();
-
-         foreach (var property in properties)
-         {
-            if (property.Name == "Record" || property.Name == "Entity")
-            {
-               continue;
-            }
-
-            var found = property.GetCustomAttributes(true)
-               .Where(a => a.GetType().FullName == "DrivenDb.DbColumnAttribute"
-                        || a.GetType().FullName == "System.Data.Linq.Mapping.ColumnAttribute")
-               .OrderBy(a => a.GetType().FullName)
-               .FirstOrDefault();
-
-            if (found != null)
-            {
-               var dbColumn = found as DbColumnAttribute;
-
-               if (dbColumn == null)
-               {
-                  var foundType = found.GetType();
-                  var generatedProperty = foundType.GetProperty("IsDbGenerated");
-                  var primaryProperty = foundType.GetProperty("IsPrimaryKey");
-                  var nameProperty = foundType.GetProperty("Name");
-
-                  dbColumn = new DbColumnAttribute()
-                     {
-                        IsDbGenerated = (bool) generatedProperty.GetGetMethod(true).Invoke(found, null),
-                        IsPrimaryKey = (bool) primaryProperty.GetGetMethod(true).Invoke(found, null),
-                        Name = (string) nameProperty.GetGetMethod(true).Invoke(found, null),
-                     };
-               }
-
-               dbColumn.Name = dbColumn.Name ?? property.Name;
-
-               columns.Add(property.Name, dbColumn);
-            }
-         }
-
-         return columns;
-      }
-
-      //int IDbRecord.IdentityHash
-      //{
-      //   get { return m_Hash.Value; }
-      //}
 
       object[] IDbRecord.PrimaryKey
       {
@@ -226,9 +113,9 @@ namespace DrivenDb
          {
             var result = new List<object>();
 
-            foreach (var column in m_PrimaryColumns)
+            foreach (var column in _primaryColumns)
             {
-               result.Add(m_Accessor.GetPropertyValue<object>(m_Instance, column.Key));
+               result.Add(_accessor.GetPropertyValue<object>(_instance, column.Key));
             }
 
             return result.ToArray();
@@ -237,32 +124,32 @@ namespace DrivenDb
 
       DateTime? IDbRecord.LastUpdated
       {
-         get { return m_LastUpdated; }
+         get { return _lastUpdated; }
       }
 
       DateTime? IDbRecord.LastModified
       {
-         get { return m_LastModified; }
+         get { return _lastModified; }
       }
 
       EntityState IDbRecord.State
       {
-         get { return m_State; }
+         get { return _state; }
       }
 
       string IDbRecord.Schema
       {
-         get { return m_Table.Schema; }
+         get { return _table.Schema; }
       }
 
       DbTableAttribute IDbRecord.Table
       {
-         get { return m_Table; }
+         get { return _table; }
       }
 
       DbSequenceAttribute IDbRecord.Sequence
       {
-         get { return m_Sequence; }
+         get { return _sequence; }
       }
 
       DbTableAttribute IDbRecord.TableOverride
@@ -273,79 +160,56 @@ namespace DrivenDb
 
       DbColumnAttribute IDbRecord.IdentityColumn
       {
-         get { return m_IdentityColumn.Value; }
+         get { return _identityColumn.Value; }
       }
 
       DbColumnAttribute[] IDbRecord.PrimaryColumns
       {
-         get { return m_PrimaryColumns.Select(c => c.Value).ToArray(); }
+         get { return _primaryColumns.Select(c => c.Value).ToArray(); }
       }
 
       IDictionary<string, DbColumnAttribute> IDbRecord.Columns
       {
-         get { return m_Columns; }
+         get { return _columns; }
       }
 
       IEnumerable<string> IDbRecord.Changes
       {
-         get { return m_Changes; }
+         get { return _changes; }
       }
 
       void IDbRecord.SetIdentity(long identity)
       {
-         if (m_IdentityColumn.Value != null && m_IsIdentity32.HasValue)
+         if (_identityColumn.Value != null && _isIdentity32.HasValue)
          {
-            if (m_IsIdentity32.Value)
+            if (_isIdentity32.Value)
             {
-               m_Accessor.SetPropertyValue(m_Instance, m_IdentityColumn.Value.Name, (int) identity);
+               _accessor.SetPropertyValue(_instance, _identityColumn.Value.Name, (int) identity);
             }
             else
             {
-               m_Accessor.SetPropertyValue(m_Instance, m_IdentityColumn.Value.Name, identity);
+               _accessor.SetPropertyValue(_instance, _identityColumn.Value.Name, identity);
             }
          }
       }
 
       object IDbRecord.GetProperty(string property)
       {
-         return m_Accessor.GetPropertyValue<object>(m_Instance, property);
+         return _accessor.GetPropertyValue<object>(_instance, property);
       }
 
       void IDbRecord.SetProperty(string property, object value)
       {
-         m_Accessor.SetPropertyValue(m_Instance, property, value);
+         _accessor.SetPropertyValue(_instance, property, value);
       }
 
       void IDbRecord.Reset()
       {
          ChangeState(EntityState.Current);
 
-         m_LastModified = null;
-         m_LastUpdated = DateTime.Now;
-         m_Changes.Clear();
+         _lastModified = null;
+         _lastUpdated = DateTime.Now;
+         _changes.Clear();
       }
-
-      //bool IDbRecord<T>.SameAs(T other)
-      //{
-      //   return m_Hash.Value == other.IdentityHash && m_Equals(m_Instance, other);
-      //}
-
-      //bool IEquatable<T>.Equals(T other)
-      //{
-      //   var value1 = m_State == EntityState.New && this.m_Hash.Value == default(int)
-      //      ? this.GetHashCode()
-      //      : m_Hash.Value;
-
-      //   var value2 = m_State == EntityState.New && this.m_Hash.Value == default(int)
-      //      ? other.GetHashCode()
-      //      : other.IdentityHash;
-
-      //   return value1 == value2 && m_Equals(m_Instance, other);
-      //}
-
-      //int IComparable<T>.CompareTo(T other)
-      //{
-      //   return m_CompareTo(this.m_Instance, other);
-      //}
    }
 }

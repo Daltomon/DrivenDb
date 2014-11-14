@@ -29,55 +29,55 @@ namespace DrivenDb.Base
    {      
       #region --- STATIC --------------------------------------------------------------------------
 
-      private static readonly Dictionary<RuntimeTypeHandle, MethodInfo> m_Methods;
-      private static readonly MethodInfo m_IsDbNull = typeof (IDataRecord).GetMethod("IsDBNull");
-      private static readonly MethodInfo m_GetValue = typeof (IDataRecord).GetMethod("GetValue");
+      private static readonly Dictionary<RuntimeTypeHandle, MethodInfo> _methods;
+      private static readonly MethodInfo _isDbNull = typeof (IDataRecord).GetMethod("IsDBNull");
+      private static readonly MethodInfo _getValue = typeof (IDataRecord).GetMethod("GetValue");
 
       static DbMapper()
       {
-         m_Methods = new Dictionary<RuntimeTypeHandle, MethodInfo>();
+         _methods = new Dictionary<RuntimeTypeHandle, MethodInfo>();
 
          // non-nullable
-         m_Methods[typeof (char).TypeHandle] = typeof (IDataRecord).GetMethod("GetChar");
-         m_Methods[typeof (byte).TypeHandle] = typeof (IDataRecord).GetMethod("GetByte");
-         m_Methods[typeof (byte[]).TypeHandle] = typeof(IDataRecord).GetMethod("GetBytes");
-         m_Methods[typeof (short).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt16");
-         m_Methods[typeof (int).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt32");
-         m_Methods[typeof (long).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt64");
-         m_Methods[typeof (float).TypeHandle] = typeof (IDataRecord).GetMethod("GetFloat");
-         m_Methods[typeof (double).TypeHandle] = typeof (IDataRecord).GetMethod("GetDouble");
-         m_Methods[typeof (decimal).TypeHandle] = typeof (IDataRecord).GetMethod("GetDecimal");
-         m_Methods[typeof (bool).TypeHandle] = typeof (IDataRecord).GetMethod("GetBoolean");
-         m_Methods[typeof (string).TypeHandle] = typeof (IDataRecord).GetMethod("GetString");
-         m_Methods[typeof (Guid).TypeHandle] = typeof (IDataRecord).GetMethod("GetGuid");
-         m_Methods[typeof (DateTime).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
-         m_Methods[typeof (TimeSpan).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
+         _methods[typeof (char).TypeHandle] = typeof (IDataRecord).GetMethod("GetChar");
+         _methods[typeof (byte).TypeHandle] = typeof (IDataRecord).GetMethod("GetByte");
+         _methods[typeof (byte[]).TypeHandle] = typeof(IDataRecord).GetMethod("GetBytes");
+         _methods[typeof (short).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt16");
+         _methods[typeof (int).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt32");
+         _methods[typeof (long).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt64");
+         _methods[typeof (float).TypeHandle] = typeof (IDataRecord).GetMethod("GetFloat");
+         _methods[typeof (double).TypeHandle] = typeof (IDataRecord).GetMethod("GetDouble");
+         _methods[typeof (decimal).TypeHandle] = typeof (IDataRecord).GetMethod("GetDecimal");
+         _methods[typeof (bool).TypeHandle] = typeof (IDataRecord).GetMethod("GetBoolean");
+         _methods[typeof (string).TypeHandle] = typeof (IDataRecord).GetMethod("GetString");
+         _methods[typeof (Guid).TypeHandle] = typeof (IDataRecord).GetMethod("GetGuid");
+         _methods[typeof (DateTime).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
+         _methods[typeof (TimeSpan).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
 
          // nullable
-         m_Methods[typeof (byte?).TypeHandle] = typeof (IDataRecord).GetMethod("GetByte");
-         m_Methods[typeof (short?).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt16");
-         m_Methods[typeof (int?).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt32");
-         m_Methods[typeof (long?).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt64");
-         m_Methods[typeof (float?).TypeHandle] = typeof (IDataRecord).GetMethod("GetFloat");
-         m_Methods[typeof (double?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDouble");
-         m_Methods[typeof (decimal?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDecimal");
-         m_Methods[typeof (bool?).TypeHandle] = typeof (IDataRecord).GetMethod("GetBoolean");
-         m_Methods[typeof (char?).TypeHandle] = typeof (IDataRecord).GetMethod("GetChar");
-         m_Methods[typeof (Guid?).TypeHandle] = typeof (IDataRecord).GetMethod("GetGuid");
-         m_Methods[typeof (DateTime?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
-         m_Methods[typeof (TimeSpan?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
+         _methods[typeof (byte?).TypeHandle] = typeof (IDataRecord).GetMethod("GetByte");
+         _methods[typeof (short?).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt16");
+         _methods[typeof (int?).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt32");
+         _methods[typeof (long?).TypeHandle] = typeof (IDataRecord).GetMethod("GetInt64");
+         _methods[typeof (float?).TypeHandle] = typeof (IDataRecord).GetMethod("GetFloat");
+         _methods[typeof (double?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDouble");
+         _methods[typeof (decimal?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDecimal");
+         _methods[typeof (bool?).TypeHandle] = typeof (IDataRecord).GetMethod("GetBoolean");
+         _methods[typeof (char?).TypeHandle] = typeof (IDataRecord).GetMethod("GetChar");
+         _methods[typeof (Guid?).TypeHandle] = typeof (IDataRecord).GetMethod("GetGuid");
+         _methods[typeof (DateTime?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
+         _methods[typeof (TimeSpan?).TypeHandle] = typeof (IDataRecord).GetMethod("GetDateTime");
       }
 
       #endregion
       #region --- PRIVATE -------------------------------------------------------------------------
 
-      private readonly ConcurrentDictionary<Identity, CacheInfo> m_Cache = new ConcurrentDictionary<Identity, CacheInfo>();
-      private readonly ConcurrentDictionary<Type, AnonActivator> m_Activators = new ConcurrentDictionary<Type, AnonActivator>();
-      private readonly IDb m_Db;
+      private readonly ConcurrentDictionary<Identity, CacheInfo> _cache = new ConcurrentDictionary<Identity, CacheInfo>();
+      private readonly ConcurrentDictionary<Type, AnonActivator> _activators = new ConcurrentDictionary<Type, AnonActivator>();
+      private readonly IDb _db;
 
       public DbMapper(IDb db)
       {
-         m_Db = db;
+         _db = db;
       }
 
       #endregion
@@ -166,7 +166,7 @@ namespace DrivenDb.Base
          return result;
       }
 
-      public IEnumerable<T> ParallelMapEntities<T>(string query, IDataReader reader)
+      public Task<IEnumerable<T>> ParallelMapEntities<T>(string query, IDataReader reader)
          where T : IDbRecord, new()
       {
          var mapper = GetDeserializer<T>(query, reader);
@@ -187,17 +187,22 @@ namespace DrivenDb.Base
             holders.Add(new DataHolder<T>() {DataRecord = new DataRecord(names, values)});
          }
 
-         Parallel.ForEach(holders, h =>
+         //TODO: based on size of holders choose different strategies
+
+         return Task.Factory.StartNew<IEnumerable<T>>(() =>
             {
-               var gnu = new T();
+               foreach (var h in holders)
+               {
+                  var gnu = new T();
 
-               mapper(h.DataRecord, gnu);
+                  mapper(h.DataRecord, gnu);
 
-               h.Entity = gnu;
-               h.Entity.Reset();
+                  h.Entity = gnu;
+                  h.Entity.Reset();
+               }
+
+               return holders.Select(h => h.Entity).ToArray();
             });
-         
-         return holders.Select(h => h.Entity).ToArray();
       }
 
       public IEnumerable<T> MapType<T>(string query, IDataReader reader)
@@ -229,10 +234,10 @@ namespace DrivenDb.Base
 
          AnonActivator info;
 
-         if (!m_Activators.TryGetValue(type, out info))
+         if (!_activators.TryGetValue(type, out info))
             {
-               m_Activators.AddOrUpdate(type, new AnonActivator(type), (t, a) => new AnonActivator(type));
-               info = m_Activators[type];
+               _activators.AddOrUpdate(type, new AnonActivator(type), (t, a) => new AnonActivator(type));
+               info = _activators[type];
             }
       
          var result = new List<T>();
@@ -268,7 +273,7 @@ namespace DrivenDb.Base
 
          CacheInfo info;
 
-         if (!m_Cache.TryGetValue(identity, out info))
+         if (!_cache.TryGetValue(identity, out info))
          {
             info = new CacheInfo();
          }
@@ -276,7 +281,7 @@ namespace DrivenDb.Base
          if (info.Deserializer == null)
          {
             info.Deserializer = BuildMapper<T>(reader);
-            m_Cache[identity] = info;
+            _cache[identity] = info;
          }
 
          return (Action<IDataRecord, T>)info.Deserializer;
@@ -301,7 +306,7 @@ namespace DrivenDb.Base
 
             MethodInfo method;
 
-            if (!m_Methods.TryGetValue(columnType.TypeHandle, out method))
+            if (!_methods.TryGetValue(columnType.TypeHandle, out method))
             {
                throw new InvalidDataException("No IDataRecord access method defined for column '" + columnName + "', type '" + columnType.Name + "' in DbMapper.");
             }
@@ -321,7 +326,7 @@ namespace DrivenDb.Base
                assignment = BuildAssignmentExpression(record, columnType, method, i, field.FieldType, target);
             }
             
-            if (assignment == null && !m_Db.AllowUnmappedColumns)
+            if (assignment == null && !_db.AllowUnmappedColumns)
             {
                throw new InactiveExtensionException(AccessorExtension.AllowUnmappedColumns.ToString(), "Unable to map column '" + columnName + "', type '" + columnType.Name + "' on target type '" + typeof(T).Name + "'.");
             }
@@ -343,9 +348,9 @@ namespace DrivenDb.Base
             var value = Expression.Variable(typeof (object));
 
             return Expression.IfThen(
-               Expression.Not(Expression.Call(record, m_IsDbNull, Expression.Constant(columnIndex, typeof (int)))),
+               Expression.Not(Expression.Call(record, _isDbNull, Expression.Constant(columnIndex, typeof (int)))),
                Expression.Block(new[] {value},
-                  Expression.Assign(value, Expression.Call(record, m_GetValue, Expression.Constant(columnIndex, typeof(int)))),
+                  Expression.Assign(value, Expression.Call(record, _getValue, Expression.Constant(columnIndex, typeof(int)))),
                   Expression.Assign(target, Expression.Convert(value, targetType))
                   ));
          }
@@ -362,7 +367,7 @@ namespace DrivenDb.Base
             var breaker = Expression.Label();
 
             return Expression.IfThen(
-               Expression.Not(Expression.Call(record, m_IsDbNull, Expression.Constant(columnIndex, typeof (int)))),
+               Expression.Not(Expression.Call(record, _isDbNull, Expression.Constant(columnIndex, typeof (int)))),
                Expression.Block(new [] {lred, loffset, buffer, memory},
                   Expression.Assign(memory, Expression.New(typeof (MemoryStream).GetConstructors()[0])),
                   Expression.Assign(buffer, Expression.New(typeof (byte[]).GetConstructors()[0], Expression.Constant(1024))),
@@ -389,14 +394,14 @@ namespace DrivenDb.Base
          else if (targetType == columnType)
          {
             return Expression.IfThen(
-               Expression.Not(Expression.Call(record, m_IsDbNull, Expression.Constant(columnIndex, typeof(int)))),
+               Expression.Not(Expression.Call(record, _isDbNull, Expression.Constant(columnIndex, typeof(int)))),
                Expression.Assign(target, Expression.Call(record, method, Expression.Constant(columnIndex, typeof(int))))
                );
          }
          else if (targetType.IsEnum || Nullable.GetUnderlyingType(targetType) == columnType)
          {
             return Expression.IfThen(
-               Expression.Not(Expression.Call(record, m_IsDbNull, Expression.Constant(columnIndex, typeof(int)))),
+               Expression.Not(Expression.Call(record, _isDbNull, Expression.Constant(columnIndex, typeof(int)))),
                Expression.Assign(target, Expression.Convert(Expression.Call(record, method, Expression.Constant(columnIndex, typeof(int))), targetType))
                );
          }
@@ -406,11 +411,11 @@ namespace DrivenDb.Base
 
       private Dictionary<string, FieldInfo> BuildFieldDictionary<T>()
       {
-         var fields = m_Db.CaseInsensitiveColumnMapping
+         var fields = _db.CaseInsensitiveColumnMapping
                          ? new Dictionary<string, FieldInfo>(StringComparer.CurrentCultureIgnoreCase)
                          : new Dictionary<string, FieldInfo>();
 
-         var bindings = m_Db.PrivateMemberColumnMapping
+         var bindings = _db.PrivateMemberColumnMapping
                            ? BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
                            : BindingFlags.Public | BindingFlags.Instance;
 
@@ -443,11 +448,11 @@ namespace DrivenDb.Base
 
       private Dictionary<string, PropertyInfo>  BuildPropertyDictionary<T>()
       {
-         var properties = m_Db.CaseInsensitiveColumnMapping
+         var properties = _db.CaseInsensitiveColumnMapping
                              ? new Dictionary<string, PropertyInfo>(StringComparer.CurrentCultureIgnoreCase)
                              : new Dictionary<string, PropertyInfo>();
 
-         var bindings = m_Db.PrivateMemberColumnMapping
+         var bindings = _db.PrivateMemberColumnMapping
                            ? BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance
                            : BindingFlags.Public | BindingFlags.Instance;
 

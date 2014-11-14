@@ -33,7 +33,7 @@ namespace DrivenDb
       void AddWhere(string column, int parameter);
       void GroupWhere();
 
-      string ToInsert<T>(T entity, int index, bool returnId) where T : IDbEntity;
+      string ToInsert<T>(T entity, int index, bool returnId) where T : IDbRecord;
       string ToSelect();
       string ToUpdate();
       string ToDelete();

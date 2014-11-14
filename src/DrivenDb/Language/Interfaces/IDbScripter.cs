@@ -28,13 +28,13 @@ namespace DrivenDb
       void ScriptSelect(IDbCommand command, string query, params object[] parameters);
 
       void ScriptInsert<T>(IDbCommand command, int index, T entity, bool returnId)
-         where T : IDbEntity;
+         where T : IDbRecord;
 
       void ScriptUpdate<T>(IDbCommand command, int index, T entity)
-         where T : IDbEntity;
+         where T : IDbRecord;
 
       void ScriptDelete<T>(IDbCommand command, int index, T entity)
-         where T : IDbEntity;
+         where T : IDbRecord;
 
       void ScriptRelatedSelect<P, C>(IEnumerable<P> parents, IDbCommand command, string[] pkey, string[] ckey)
          where P : IDbRecord

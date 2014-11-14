@@ -31,25 +31,25 @@ namespace DrivenDb.Base
       }
 
       public void WriteEntity<T>(T entity)
-         where T : IDbEntity
+         where T : IDbRecord
       {
          m_Accessor.TransactEntity(m_Connection, m_Transaction, entity, true);
       }
 
       public void WriteEntity<T>(T entity, bool returnId)
-         where T : IDbEntity
+         where T : IDbRecord
       {
          m_Accessor.TransactEntity(m_Connection, m_Transaction, entity, returnId);
       }
 
       public void WriteEntities<T>(IEnumerable<T> entities)
-         where T : IDbEntity
+         where T : IDbRecord
       {
          m_Accessor.TransactEntities(m_Connection, m_Transaction, entities, true);
       }
 
       public void WriteEntities<T>(IEnumerable<T> entities, bool returnIds)
-         where T : IDbEntity
+         where T : IDbRecord
       {
          m_Accessor.TransactEntities(m_Connection, m_Transaction, entities, returnIds);
       }

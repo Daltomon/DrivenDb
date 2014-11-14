@@ -17,9 +17,9 @@ namespace DrivenDb
 {
    internal class Db : IDb
    {      
-      private readonly DbAccessorType m_Type;
-      private readonly AccessorExtension m_Extensions;
-      private readonly Func<IDbConnection> m_Connections;
+      private readonly DbAccessorType _type;
+      private readonly AccessorExtension _extensions;
+      private readonly Func<IDbConnection> _connections;
 
       public Db(AccessorExtension extensions, Func<IDbConnection> connections)
          : this(DbAccessorType.MsSql, extensions, connections)
@@ -28,11 +28,11 @@ namespace DrivenDb
 
       public Db(DbAccessorType type, AccessorExtension extensions, Func<IDbConnection> connections)
       {         
-         m_Type = type;
-         m_Extensions = extensions;
-         m_Connections = connections;
+         _type = type;
+         _extensions = extensions;
+         _connections = connections;
 
-         switch(m_Type)
+         switch(_type)
          {
             case DbAccessorType.MsSql:
                ParameterLimit = 1000;     // half of what is available
@@ -47,7 +47,7 @@ namespace DrivenDb
 
       public DbAccessorType Type
       {
-         get { return m_Type; }
+         get { return _type; }
       }
 
       public int ParameterLimit
@@ -64,32 +64,32 @@ namespace DrivenDb
 
       public bool AllowEnumerableParameters
       {
-         get { return (m_Extensions & AccessorExtension.AllowEnumerableParameters) == AccessorExtension.AllowEnumerableParameters; }
+         get { return (_extensions & AccessorExtension.AllowEnumerableParameters) == AccessorExtension.AllowEnumerableParameters; }
       }
 
       public bool LimitDateParameters
       {
-         get { return (m_Extensions & AccessorExtension.LimitDateParameters) == AccessorExtension.LimitDateParameters; }
+         get { return (_extensions & AccessorExtension.LimitDateParameters) == AccessorExtension.LimitDateParameters; }
       }
 
       public bool AllowUnmappedColumns
       {
-         get { return (m_Extensions & AccessorExtension.AllowUnmappedColumns) == AccessorExtension.AllowUnmappedColumns; }
+         get { return (_extensions & AccessorExtension.AllowUnmappedColumns) == AccessorExtension.AllowUnmappedColumns; }
       }
 
       public bool CaseInsensitiveColumnMapping
       {
-         get { return (m_Extensions & AccessorExtension.CaseInsensitiveColumnMapping) == AccessorExtension.CaseInsensitiveColumnMapping; }
+         get { return (_extensions & AccessorExtension.CaseInsensitiveColumnMapping) == AccessorExtension.CaseInsensitiveColumnMapping; }
       }
 
       public bool PrivateMemberColumnMapping
       {
-         get { return (m_Extensions & AccessorExtension.PrivateMemberColumnMapping) == AccessorExtension.PrivateMemberColumnMapping; }
+         get { return (_extensions & AccessorExtension.PrivateMemberColumnMapping) == AccessorExtension.PrivateMemberColumnMapping; }
       }
 
       public IDbConnection CreateConnection()
       {
-         return m_Connections();
+         return _connections();
       }
    }
 }

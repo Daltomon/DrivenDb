@@ -31,13 +31,13 @@ namespace DrivenDb.MsSql
       }
 
       public void WriteEntityUsingScopeIdentity<T>(T entity)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
       {
          WriteEntitiesUsingScopeIdentity(new[] { entity });
       }
 
       public void WriteEntitiesUsingScopeIdentity<T>(IEnumerable<T> entities)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
       {
          WriteEntities(null, null, entities,
                        (c, i, e) => m_Scripter.ScriptInsertWithScopeIdentity<T>(c, e, i, true)
@@ -49,14 +49,14 @@ namespace DrivenDb.MsSql
       }
 
       public Tuple<T, D> WriteEntityAndOutputDeleted<T, D>(T entity, D deleted)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
          where D : class
       {
          return WriteEntitiesAndOutputDeleted(new[] { entity }, deleted).First();
       }
 
       public IEnumerable<Tuple<T, D>> WriteEntitiesAndOutputDeleted<T, D>(IEnumerable<T> entities, D deleted)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
          where D : class
       {
          if (!(typeof(D).FullName ?? "").Contains("AnonymousType"))

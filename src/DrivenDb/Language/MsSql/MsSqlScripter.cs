@@ -26,7 +26,7 @@ namespace DrivenDb.MsSql
       }
 
       public void ScriptInsertWithScopeIdentity<T>(IDbCommand command, T entity, int index, bool returnId)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
       {
          var builder = m_Builders();
          var parameters = InitializeBuilderForInsert(builder, entity);
@@ -44,7 +44,7 @@ namespace DrivenDb.MsSql
       //}
 
       public void ScriptUpdateOutputDeleted<T>(IDbCommand command, int index, T entity, string[] deleted)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
       {         
          var builder = m_Builders();          
          var parameters = InitializeBuilderForUpdate(builder, entity);
@@ -53,7 +53,7 @@ namespace DrivenDb.MsSql
       }
 
       public void ScriptDeleteOutputDeleted<T>(IDbCommand command, int index, T entity, string[] deleted)
-         where T : IDbEntity, new()
+         where T : IDbRecord, new()
       {
          var builder = m_Builders();
          var parameters = InitializeBuilderForDelete(builder, entity);

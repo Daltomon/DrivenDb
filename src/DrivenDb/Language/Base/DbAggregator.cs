@@ -84,7 +84,7 @@ namespace DrivenDb.Base
          var primaryGetter = GetPrimaryGetter(aggregates.First().GetType());
          var primaries = aggregates.Select(a => primaryGetter.Invoke(a, null))
             .Where(p => p != null)
-            .Cast<IDbEntity>()
+            .Cast<IDbRecord>()
             .ToArray();
 
          accessor.WriteEntities(primaries);
@@ -95,7 +95,7 @@ namespace DrivenDb.Base
       private static void UpdateForeigns(IDbAccessorSlim accessor, IEnumerable<IDbAggregate> aggregates, MethodInfo primaryGetter)
       {         
          var foreignProperties = GetForeignProperties(aggregates.First().GetType());
-         var foreigns = new List<IDbEntity>();
+         var foreigns = new List<IDbRecord>();
 
          foreach (var aggregate in aggregates)
          {
@@ -111,14 +111,14 @@ namespace DrivenDb.Base
                {
                   foreach (var foreign in foreignEnumerable)
                   {
-                     UpdateForeign(primary, (IDbEntity) foreign, mappings);
+                     UpdateForeign(primary, (IDbRecord) foreign, mappings);
 
-                     foreigns.Add((IDbEntity) foreign);
+                     foreigns.Add((IDbRecord) foreign);
                   }
                }
                else
                {
-                  var foreign = (IDbEntity) foreignObject;
+                  var foreign = (IDbRecord) foreignObject;
 
                   UpdateForeign(primary, foreign, mappings);
 
@@ -130,7 +130,7 @@ namespace DrivenDb.Base
          accessor.WriteEntities(foreigns);
       }
 
-      private static void UpdateForeign(object primary, IDbEntity foreign, IEnumerable<DbForeignAttribute> mappings)
+      private static void UpdateForeign(object primary, IDbRecord foreign, IEnumerable<DbForeignAttribute> mappings)
       {
          foreach (var mapping in mappings)
          {
@@ -148,7 +148,7 @@ namespace DrivenDb.Base
          return primary.GetType().GetProperty(primaryProperty).GetGetMethod();
       }
 
-      private static MethodInfo GetPropertySetter(IDbEntity foreign, string foreignProperty)
+      private static MethodInfo GetPropertySetter(IDbRecord foreign, string foreignProperty)
       {
          return foreign.GetType().GetProperty(foreignProperty).GetSetMethod();
       }

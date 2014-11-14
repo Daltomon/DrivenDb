@@ -18,7 +18,7 @@ namespace DrivenDb.Tests.Language
             DbChangeType.Updated,
             "TestTable",
             new string[] {"ColumnA", "ColumnB"},
-            null
+            default(IDbRecord)
             );
 
          using (var memory = new MemoryStream())

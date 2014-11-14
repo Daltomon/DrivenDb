@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Language\AccessorExtensions.cs" />
+    <Compile Include="Language\AttributeHelper.cs" />
     <Compile Include="Language\Attributes\DbForeignAttribute.cs" />
     <Compile Include="Language\Attributes\DbColumnAttribute.cs" />
     <Compile Include="Language\Attributes\DbPrimaryAttribute.cs" />
@@ -74,13 +75,10 @@
     <Compile Include="Language\Interfaces\IDbMonitor.cs" />
     <Compile Include="Language\Interfaces\IEqualsJoinable.cs" />
     <Compile Include="Language\Interfaces\IOnJoiner.cs" />
-    <Compile Include="Language\Interfaces\IParallelAccessor.cs" />
-    <Compile Include="Language\Interfaces\IParallelAccessorSlim.cs" />
     <Compile Include="Language\Interfaces\IFallbackAccessorSlim.cs" />
     <Compile Include="Language\Interfaces\ISqlBuilder.cs" />
     <Compile Include="Language\Interfaces\IValueJoiner.cs" />
     <Compile Include="Language\Interfaces\IDbAccessor.cs" />
-    <Compile Include="Language\Interfaces\IDbEntity.cs" />
     <Compile Include="Language\Interfaces\IDbMapper.cs" />
     <Compile Include="Language\Interfaces\IDbRecord.cs" />
     <Compile Include="Language\Interfaces\IDbScripter.cs" />

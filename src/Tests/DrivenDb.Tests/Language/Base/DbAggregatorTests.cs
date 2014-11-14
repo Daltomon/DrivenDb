@@ -39,7 +39,7 @@ namespace DrivenDb.Tests.Language.Base
          var accessor = new Mock<IDbAccessor>();
          var actual = false;
 
-         accessor.Setup(a => a.WriteEntity(It.IsAny<IDbEntity>()))
+         accessor.Setup(a => a.WriteEntity(It.IsAny<IDbRecord>()))
             .Callback(() => actual = true);
 
          var sut = new DbAggregator();
@@ -55,7 +55,7 @@ namespace DrivenDb.Tests.Language.Base
          var accessor = new Mock<IDbAccessor>();
          var actual = false;
 
-         accessor.Setup(a => a.WriteEntity(It.IsAny<IDbEntity>()))
+         accessor.Setup(a => a.WriteEntity(It.IsAny<IDbRecord>()))
             .Callback(() => actual = true);
 
          var sut = new DbAggregator();
@@ -78,8 +78,8 @@ namespace DrivenDb.Tests.Language.Base
          var accessor = new Mock<IDbAccessor>();
          var actual = 0;
 
-         accessor.Setup(a => a.WriteEntities(It.IsAny<IEnumerable<IDbEntity>>()))
-            .Callback<IEnumerable<IDbEntity>>((e) => actual += e.Count());
+         accessor.Setup(a => a.WriteEntities(It.IsAny<IEnumerable<IDbRecord>>()))
+            .Callback<IEnumerable<IDbRecord>>((e) => actual += e.Count());
 
          var sut = new DbAggregator();
 
@@ -151,8 +151,8 @@ namespace DrivenDb.Tests.Language.Base
          var accessor = new Mock<IDbAccessor>();
          var actual = 0;
 
-         accessor.Setup(a => a.WriteEntities(It.IsAny<IEnumerable<IDbEntity>>()))
-            .Callback<IEnumerable<IDbEntity>>((e) => actual += e.Count());
+         accessor.Setup(a => a.WriteEntities(It.IsAny<IEnumerable<IDbRecord>>()))
+            .Callback<IEnumerable<IDbRecord>>((e) => actual += e.Count());
 
          var sut = new DbAggregator();
 
@@ -199,8 +199,8 @@ namespace DrivenDb.Tests.Language.Base
          var accessor = new Mock<IDbAccessor>();
          var actual = 0;
 
-         accessor.Setup(a => a.WriteEntities(It.IsAny<IEnumerable<IDbEntity>>()))
-            .Callback<IEnumerable<IDbEntity>>((e) => actual += e.Count());
+         accessor.Setup(a => a.WriteEntities(It.IsAny<IEnumerable<IDbRecord>>()))
+            .Callback<IEnumerable<IDbRecord>>((e) => actual += e.Count());
 
          var sut = new DbAggregator();
 

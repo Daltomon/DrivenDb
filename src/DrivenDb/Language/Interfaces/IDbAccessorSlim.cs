@@ -27,19 +27,10 @@ namespace DrivenDb
       T ReadIdentity<T, K>(K key)
          where T : IDbRecord, new();
 
-      T ReadIdentity<T, K1, K2>(K1 key1, K2 key2)
-         where T : IDbRecord, new();
-
-      T ReadIdentity<T, K1, K2, K3>(K1 key1, K2 key2, K3 key3)
-         where T : IDbRecord, new();
-
-      T ReadIdentity<T, K1, K2, K3, K4>(K1 key1, K2 key2, K3 key3, K4 key4)
-         where T : IDbRecord, new();
-
       IOnJoiner<P, C> ReadRelated<P, C>(P parent)
          where P : IDbRecord, new()
          where C : IDbRecord, new();
-
+       
       IOnJoiner<P, C> ReadRelated<P, C>(IEnumerable<P> parents)
          where P : IDbRecord, new()
          where C : IDbRecord, new();
@@ -63,9 +54,9 @@ namespace DrivenDb
 
       IDbScope CreateScope();
 
-      void WriteEntity(IDbEntity entity);
+      void WriteEntity(IDbRecord entity);
 
-      void WriteEntities(IEnumerable<IDbEntity> entities);
+      void WriteEntities(IEnumerable<IDbRecord> entities);
 
       void Execute(string query, params object[] parameters);
 
@@ -73,11 +64,6 @@ namespace DrivenDb
       {
          get;
          set;
-      }
-
-      IParallelAccessorSlim Parallel
-      {
-         get;
       }
 
       IFallbackAccessorSlim Fallback

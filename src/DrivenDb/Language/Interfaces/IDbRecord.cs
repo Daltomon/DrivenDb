@@ -15,16 +15,8 @@ using System.Collections.Generic;
 
 namespace DrivenDb
 {
-   //
-   // TODO: IDbRecord - Add query result poco generater
-   //
    public interface IDbRecord
-   {
-      //int IdentityHash
-      //{
-      //   get;
-      //}
-
+   {      
       object[] PrimaryKey
       {
          get;
@@ -94,9 +86,4 @@ namespace DrivenDb
 
       void Reset();
    }
-
-   //public interface IDbRecord<T> : IDbRecord, IEquatable<T>, IComparable<T>
-   //{
-   //   //bool SameAs(T other);
-   //}
 }

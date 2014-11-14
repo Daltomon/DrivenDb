@@ -156,7 +156,7 @@ namespace DrivenDb.Tests.Examples
             .ToList();
 
          thing2s[0].Value = "one";
-         thing2s[2].Entity.Delete();
+         thing2s[2].Delete();
 
          var gnu2 = new Thing2() { Thing1Id = 1, Name = "New Thing 2", Value = "Priceless" };
 

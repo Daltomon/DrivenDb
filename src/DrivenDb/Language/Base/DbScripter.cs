@@ -83,7 +83,7 @@ namespace DrivenDb.Base
       }
 
       public void ScriptUpdate<T>(IDbCommand command, int index, T entity)
-          where T : IDbEntity
+          where T : IDbRecord
       {         
          var builder = m_Builders();         
          var parameters = InitializeBuilderForUpdate(builder, entity);
@@ -91,7 +91,8 @@ namespace DrivenDb.Base
          AppendQuery(command, index, builder.ToUpdate(), parameters);
       }
 
-      protected IEnumerable<object> InitializeBuilderForUpdate<T>(ISqlBuilder builder, T entity) where T : IDbEntity
+      protected IEnumerable<object> InitializeBuilderForUpdate<T>(ISqlBuilder builder, T entity) 
+         where T : IDbRecord
       {
          var metadata = entity;
 
@@ -123,7 +124,7 @@ namespace DrivenDb.Base
       }
 
       public void ScriptDelete<T>(IDbCommand command, int index, T entity)
-          where T : IDbEntity
+          where T : IDbRecord
       {
          var builder = m_Builders();
          var parameters = InitializeBuilderForDelete(builder, entity);
@@ -131,7 +132,8 @@ namespace DrivenDb.Base
          AppendQuery(command, index, builder.ToDelete(), parameters);
       }
 
-      protected static IEnumerable<object> InitializeBuilderForDelete<T>(ISqlBuilder builder, T entity) where T : IDbEntity
+      protected static IEnumerable<object> InitializeBuilderForDelete<T>(ISqlBuilder builder, T entity) 
+         where T : IDbRecord
       {
          var metadata = entity;
 
@@ -188,8 +190,8 @@ namespace DrivenDb.Base
          AppendQuery(command, -1, builder.ToSelect(), parameters);
       }
 
-      public void ScriptInsert<T>(IDbCommand command, int index, T entity, bool returnId) 
-         where T : IDbEntity
+      public void ScriptInsert<T>(IDbCommand command, int index, T entity, bool returnId)
+         where T : IDbRecord
       {
          var builder = m_Builders();
          var parameters = InitializeBuilderForInsert(builder, entity);
@@ -197,7 +199,7 @@ namespace DrivenDb.Base
          AppendQuery(command, index, builder.ToInsert(entity, index, returnId), parameters);         
       }
 
-      protected static IEnumerable<object> InitializeBuilderForInsert<T>(ISqlBuilder builder, T entity) where T : IDbEntity
+      protected static IEnumerable<object> InitializeBuilderForInsert<T>(ISqlBuilder builder, T entity) where T : IDbRecord
       {
          var count = 0;
          var metadata = entity;

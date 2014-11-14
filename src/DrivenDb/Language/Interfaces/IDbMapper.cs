@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace DrivenDb
 {
@@ -32,7 +33,7 @@ namespace DrivenDb
 
       IEnumerable<T> MapAnonymous<T>(T model, string query, IDataReader reader);
 
-      IEnumerable<T> ParallelMapEntities<T>(string query, IDataReader reader)
+      Task<IEnumerable<T>> ParallelMapEntities<T>(string query, IDataReader reader)
          where T : IDbRecord, new();
 
       IEnumerable<T> MapType<T>(string query, IDataReader reader)

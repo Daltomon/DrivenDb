@@ -48,14 +48,14 @@ namespace DrivenDb.Tests.Language
       {
          var source = new MyTable() { MyNumber = 1, MyIdentity = 2, MyString = "3" };
 
-         source.Entity.Reset();
+         source.AsRecord().Reset();
 
          var target = source.ToUpdate();
 
          Assert.Equal(1, target.MyNumber);
          Assert.Equal(2, target.MyIdentity);
          Assert.Equal("3", target.MyString);
-         Assert.Equal(EntityState.Modified, target.Entity.State);
+         Assert.Equal(EntityState.Modified, target.AsRecord().State);
       }
 
       [Fact]
@@ -63,26 +63,15 @@ namespace DrivenDb.Tests.Language
       {
          var source = new MyTable() { MyNumber = 1, MyIdentity = 2, MyString = "3" };
 
-         source.Entity.Reset();
+         source.AsRecord().Reset();
 
          var target = source.ToNew();
 
          Assert.Equal(1, target.MyNumber);
          Assert.Equal(0, target.MyIdentity);
          Assert.Equal("3", target.MyString);
-         Assert.Equal(EntityState.New, target.Entity.State);
+         Assert.Equal(EntityState.New, target.AsRecord().State);
       }
-
-      // OBSOLETE
-      //[Fact]
-      //public void State_CanBeModifiedManually()
-      //{
-      //   var table = new MyTable();
-
-      //   table.Entity.State = EntityState.Modified;
-
-      //   Assert.Equal(EntityState.Modified, table.Entity.State);
-      //}
 
       [Fact]
       public void EqualityComparisonProplemSolved()
@@ -130,24 +119,8 @@ namespace DrivenDb.Tests.Language
          Assert.Equal(instance1.MyIdentity, instance2.MyIdentity);
          Assert.Equal(instance1.MyNumber, instance2.MyNumber);
          Assert.Equal(instance1.MyString, instance2.MyString);
-         Assert.True(instance2.Entity.LastModified > instance1.Entity.LastModified);
+         Assert.True(instance2.AsRecord().LastModified > instance1.AsRecord().LastModified);
       }
-
-      //[Fact]
-      //public void Update_ThrowsOnIdentityCheck()
-      //{
-      //   var instance1 = new MyTable();
-
-      //   instance1.MyIdentity = 1;
-
-      //   var instance2 = new MyTable();
-
-      //   instance2.MyIdentity = 2;
-
-      //   Assert.Throws<InvalidDataException>(
-      //      () => instance2.Update(instance1, true)
-      //      );
-      //}
 
       [Fact]
       public void Clone_CopiesAllPropertiesProperly()
@@ -170,17 +143,17 @@ namespace DrivenDb.Tests.Language
       {
          var instance1 = new MyTable();
 
-         instance1.Entity.Reset();
+         instance1.AsRecord().Reset();
 
-         Assert.Equal(EntityState.Current, instance1.Entity.State);
+         Assert.Equal(EntityState.Current, instance1.AsRecord().State);
 
          instance1.MyNumber = 2;
 
-         Assert.Equal(EntityState.Modified, instance1.Entity.State);
+         Assert.Equal(EntityState.Modified, instance1.AsRecord().State);
 
          var instance2 = instance1.Clone();
 
-         Assert.Equal(EntityState.Modified, instance2.Entity.State);
+         Assert.Equal(EntityState.Modified, instance2.AsRecord().State);
       }
 
       [Fact]
@@ -192,8 +165,8 @@ namespace DrivenDb.Tests.Language
 
          var instance2 = instance1.Clone();
 
-         Assert.Equal(1, instance2.Entity.Changes.Count());
-         Assert.True(instance2.Entity.Changes.Contains("MyNumber"));
+         Assert.Equal(1, instance2.AsRecord().Changes.Count());
+         Assert.True(instance2.AsRecord().Changes.Contains("MyNumber"));
       }
 
       [Fact]
@@ -201,13 +174,13 @@ namespace DrivenDb.Tests.Language
       {
          var instance1 = new MyTable();
 
-         instance1.Entity.Reset();
+         instance1.AsRecord().Reset();
          instance1.MyNumber = 2;
 
          var instance2 = instance1.Clone();
 
-         Assert.Equal(instance1.Entity.LastModified, instance2.Entity.LastModified);
-         Assert.Equal(instance1.Entity.LastUpdated, instance2.Entity.LastUpdated);
+         Assert.Equal(instance1.AsRecord().LastModified, instance2.AsRecord().LastModified);
+         Assert.Equal(instance1.AsRecord().LastUpdated, instance2.AsRecord().LastUpdated);
       }
 
       [Fact]
@@ -215,13 +188,13 @@ namespace DrivenDb.Tests.Language
       {
          var instance = new MyTable();
 
-         Assert.Equal(instance.Entity.State, EntityState.New);
-         Assert.Equal(instance.Entity.Columns.Count, 3);
-         Assert.Equal(instance.Entity.PrimaryColumns.Length, 1);
-         Assert.Equal(instance.Entity.PrimaryColumns[0].Name, "MyIdentity");
-         Assert.Equal(instance.Entity.IdentityColumn.Name, "MyIdentity");
-         Assert.Equal(instance.Entity.IdentityColumn.Name, "MyIdentity");
-         Assert.Equal(instance.Entity.Changes.Count(), 0);
+         Assert.Equal(instance.AsRecord().State, EntityState.New);
+         Assert.Equal(instance.AsRecord().Columns.Count, 3);
+         Assert.Equal(instance.AsRecord().PrimaryColumns.Length, 1);
+         Assert.Equal(instance.AsRecord().PrimaryColumns[0].Name, "MyIdentity");
+         Assert.Equal(instance.AsRecord().IdentityColumn.Name, "MyIdentity");
+         Assert.Equal(instance.AsRecord().IdentityColumn.Name, "MyIdentity");
+         Assert.Equal(instance.AsRecord().Changes.Count(), 0);
       }
 
       [Fact]
@@ -231,55 +204,30 @@ namespace DrivenDb.Tests.Language
 
          instance.MyString = "test";
 
-         Assert.Equal(instance.Entity.State, EntityState.New);
-         Assert.Equal(instance.Entity.Changes.Count(), 1);
-         Assert.Equal(instance.Entity.Changes.First(), "MyString");
+         Assert.Equal(instance.AsRecord().State, EntityState.New);
+         Assert.Equal(instance.AsRecord().Changes.Count(), 1);
+         Assert.Equal(instance.AsRecord().Changes.First(), "MyString");
 
-         instance.Entity.SetIdentity(1);
-         instance.Entity.Reset();
+         instance.AsRecord().SetIdentity(1);
+         instance.AsRecord().Reset();
 
-         Assert.Equal(instance.Entity.State, EntityState.Current);
-         Assert.Equal(instance.Entity.Changes.Count(), 0);
+         Assert.Equal(instance.AsRecord().State, EntityState.Current);
+         Assert.Equal(instance.AsRecord().Changes.Count(), 0);
 
          instance.MyString = "test";
 
-         Assert.Equal(instance.Entity.Changes.Count(), 1);
-         Assert.Equal(instance.Entity.Changes.First(), "MyString");
+         Assert.Equal(instance.AsRecord().Changes.Count(), 1);
+         Assert.Equal(instance.AsRecord().Changes.First(), "MyString");
       }
-
-      //[Fact]
-      //public void IdentityComparisonTest()
-      //{
-      //   var instance1 = new MyTable();
-      //   var instance2 = new MyTable();
-
-      //   instance1.Entity.SetIdentity(1);
-      //   instance2.Entity.SetIdentity(1);
-      //   instance1.Entity.Reset();
-      //   instance2.Entity.Reset();
-
-      //   Assert.Equal(instance1.Entity.State, EntityState.Current);
-      //   Assert.Equal(instance1.Entity.State, EntityState.Current);
-      //   Assert.Equal(instance1.Entity.Changes.Count(), 0);
-      //   Assert.True(instance1.Entity.SameAs(instance2));
-      //   Assert.True(instance1.Entity.SameAs(instance2));
-
-      //   instance2.Entity.SetIdentity(2);
-
-      //   Assert.Equal(instance1.Entity.State, EntityState.Current);
-      //   Assert.Equal(instance1.Entity.Changes.Count(), 0);
-      //   Assert.False(instance1.Entity.SameAs(instance2));
-      //   Assert.False(instance1.Entity.SameAs(instance2));
-      //}
 
       [Fact]
       public void DeleteTest()
       {
          var instance = new MyTable();
 
-         instance.Entity.Delete();
+         instance.Delete();
 
-         Assert.Equal(instance.Entity.State, EntityState.Deleted);
+         Assert.Equal(instance.AsRecord().State, EntityState.Deleted);
       }
 
       [Fact]
@@ -288,15 +236,15 @@ namespace DrivenDb.Tests.Language
          var instance1 = new MyTable();
          var instance2 = new MyTable();
 
-         instance1.Entity.SetIdentity(1);
-         instance2.Entity.SetIdentity(2);
-         instance1.Entity.Reset();
-         instance2.Entity.Reset();
+         instance1.AsRecord().SetIdentity(1);
+         instance2.AsRecord().SetIdentity(2);
+         instance1.AsRecord().Reset();
+         instance2.AsRecord().Reset();
 
-         Assert.Equal(instance1.Entity.PrimaryKey.Length, 1);
-         Assert.Equal((int) instance1.Entity.PrimaryKey[0], 1);
-         Assert.Equal(instance2.Entity.PrimaryKey.Length, 1);
-         Assert.Equal((int) instance2.Entity.PrimaryKey[0], 2);
+         Assert.Equal(instance1.AsRecord().PrimaryKey.Length, 1);
+         Assert.Equal((int) instance1.AsRecord().PrimaryKey[0], 1);
+         Assert.Equal(instance2.AsRecord().PrimaryKey.Length, 1);
+         Assert.Equal((int) instance2.AsRecord().PrimaryKey[0], 2);
          Assert.NotEqual(instance1, instance2);
       }
 
@@ -312,13 +260,13 @@ namespace DrivenDb.Tests.Language
          instance2.MyKey1 = 3;
          instance2.MyKey2 = 4;
 
-         Assert.Equal(instance1.Entity.PrimaryKey.Length, 2);
-         Assert.Equal((int) instance1.Entity.PrimaryKey[0], 1);
-         Assert.Equal((int) instance1.Entity.PrimaryKey[1], 2);
+         Assert.Equal(instance1.AsRecord().PrimaryKey.Length, 2);
+         Assert.Equal((int) instance1.AsRecord().PrimaryKey[0], 1);
+         Assert.Equal((int) instance1.AsRecord().PrimaryKey[1], 2);
 
-         Assert.Equal(instance2.Entity.PrimaryKey.Length, 2);
-         Assert.Equal((int) instance2.Entity.PrimaryKey[0], 3);
-         Assert.Equal((int) instance2.Entity.PrimaryKey[1], 4);
+         Assert.Equal(instance2.AsRecord().PrimaryKey.Length, 2);
+         Assert.Equal((int) instance2.AsRecord().PrimaryKey[0], 3);
+         Assert.Equal((int) instance2.AsRecord().PrimaryKey[1], 4);
 
          Assert.NotEqual(instance1, instance2);
       }
@@ -330,23 +278,23 @@ namespace DrivenDb.Tests.Language
          var instance2 = new MyTable();
 
          instance1.MyString = "test";
-         instance2.Entity.Merge(instance1);
+         instance2.Merge(instance1);
 
-         Assert.True(instance1.Entity.LastModified.HasValue);
-         Assert.True(instance2.Entity.LastModified.HasValue);
-         Assert.Equal(instance1.Entity.LastModified.Value, instance2.Entity.LastModified.Value);
+         Assert.True(instance1.AsRecord().LastModified.HasValue);
+         Assert.True(instance2.AsRecord().LastModified.HasValue);
+         Assert.Equal(instance1.AsRecord().LastModified.Value, instance2.AsRecord().LastModified.Value);
 
-         instance1.Entity.SetIdentity(1);
-         instance2.Entity.SetIdentity(1);
-         instance1.Entity.Reset();
-         instance2.Entity.Reset();
-         instance2.Entity.Merge(instance1);
+         instance1.AsRecord().SetIdentity(1);
+         instance2.AsRecord().SetIdentity(1);
+         instance1.AsRecord().Reset();
+         instance2.AsRecord().Reset();
+         instance2.Merge(instance1);
 
          Assert.Equal(instance2.MyIdentity, 1);
          Assert.Equal(instance2.MyString, "test");
-         //Assert.True(instance1.Entity.SameAs(instance2));
-         Assert.False(instance1.Entity.LastModified.HasValue);
-         Assert.False(instance2.Entity.LastModified.HasValue);
+         //Assert.True(instance1.SameAs(instance2));
+         Assert.False(instance1.AsRecord().LastModified.HasValue);
+         Assert.False(instance2.AsRecord().LastModified.HasValue);
       }
 
       [Fact]
@@ -355,38 +303,38 @@ namespace DrivenDb.Tests.Language
          var instance1 = new MyTable();
          var instance2 = new MyTable();
 
-         instance1.Entity.SetIdentity(1);
-         instance2.Entity.SetIdentity(1);
-         instance1.Entity.Reset();
-         instance2.Entity.Reset();
+         instance1.AsRecord().SetIdentity(1);
+         instance2.AsRecord().SetIdentity(1);
+         instance1.AsRecord().Reset();
+         instance2.AsRecord().Reset();
 
          instance1.MyString = "test";
          instance2.MyNumber = 5;
 
-         Assert.True(instance1.Entity.LastModified.HasValue);
-         Assert.Equal(instance1.Entity.Changes.Count(), 1);
-         Assert.True(instance2.Entity.LastModified.HasValue);
-         Assert.Equal(instance2.Entity.Changes.Count(), 1);
+         Assert.True(instance1.AsRecord().LastModified.HasValue);
+         Assert.Equal(instance1.AsRecord().Changes.Count(), 1);
+         Assert.True(instance2.AsRecord().LastModified.HasValue);
+         Assert.Equal(instance2.AsRecord().Changes.Count(), 1);
 
-         instance2.Entity.Merge(instance1);
+         instance2.Merge(instance1);
 
-         Assert.Equal(instance1.Entity.Changes.Count(), 1);
-         Assert.Equal(instance2.Entity.Changes.Count(), 2);
-         Assert.Equal(instance2.Entity.State, instance1.Entity.State);
+         Assert.Equal(instance1.AsRecord().Changes.Count(), 1);
+         Assert.Equal(instance2.AsRecord().Changes.Count(), 2);
+         Assert.Equal(instance2.AsRecord().State, instance1.AsRecord().State);
 
-         instance1.Entity.Reset();
-         instance2.Entity.Reset();
+         instance1.AsRecord().Reset();
+         instance2.AsRecord().Reset();
          instance2.MyNumber = 5;
-         instance2.Entity.Merge(instance1);
+         instance2.Merge(instance1);
 
-         Assert.Equal(instance2.Entity.Changes.Count(), 1);
-         Assert.Equal(instance2.Entity.State, EntityState.Modified);
-         Assert.NotEqual(instance2.Entity.State, instance1.Entity.State);
+         Assert.Equal(instance2.AsRecord().Changes.Count(), 1);
+         Assert.Equal(instance2.AsRecord().State, EntityState.Modified);
+         Assert.NotEqual(instance2.AsRecord().State, instance1.AsRecord().State);
 
-         instance1.Entity.Delete();
-         instance2.Entity.Merge(instance1);
+         instance1.Delete();
+         instance2.Merge(instance1);
 
-         Assert.Equal(instance2.Entity.State, EntityState.Deleted);
+         Assert.Equal(instance2.AsRecord().State, EntityState.Deleted);
       }
 
       [Fact]
@@ -398,32 +346,11 @@ namespace DrivenDb.Tests.Language
          instance1.MyNumber = 999;
          instance2.MyString = "test";
 
-         instance2.Entity.Merge(instance1);
+         instance2.Merge(instance1);
 
          Assert.Equal(instance2.MyNumber, 999);
          Assert.Equal(instance2.MyString, "test");
       }
-
-      //[Fact]
-      //public void MergeWithIdentityCheckAndDifferentIdentitiesFails()
-      //{
-      //   var instance1 = new MyTable();
-      //   var instance2 = new MyTable();
-
-      //   instance1.Entity.SetIdentity(1);
-      //   instance2.Entity.SetIdentity(2);
-
-      //   instance1.Entity.Reset();
-      //   instance2.Entity.Reset();
-
-      //   instance1.MyNumber = 999;
-      //   instance2.MyString = "test";
-
-      //   Assert.Throws<InvalidDataException>(() =>
-      //      {
-      //         instance2.Entity.Merge(instance1);
-      //      });
-      //}
 
       [Fact]
       public void MergeWithoutIdentityCheckAndDifferentIdentitiesSucceeds()
@@ -431,16 +358,16 @@ namespace DrivenDb.Tests.Language
          var instance1 = new MyTable();
          var instance2 = new MyTable();
 
-         instance1.Entity.SetIdentity(1);
-         instance2.Entity.SetIdentity(2);
+         instance1.AsRecord().SetIdentity(1);
+         instance2.AsRecord().SetIdentity(2);
 
-         instance1.Entity.Reset();
-         instance2.Entity.Reset();
+         instance1.AsRecord().Reset();
+         instance2.AsRecord().Reset();
 
          instance1.MyNumber = 999;
          instance2.MyString = "test";
 
-         instance2.Entity.Merge(instance1);
+         instance2.Merge(instance1);
 
          Assert.Equal(instance2.MyNumber, 999);
          Assert.Equal(instance2.MyString, "test");

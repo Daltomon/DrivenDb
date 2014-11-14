@@ -68,7 +68,8 @@ namespace DrivenDb.Base
          m_Wheres.Clear();
       }
 
-      public abstract string ToInsert<T>(T entity, int index, bool returnId) where T : IDbEntity;
+      public abstract string ToInsert<T>(T entity, int index, bool returnId)
+         where T : IDbRecord;
 
       public string ToSelect()
       {

@@ -20,10 +20,10 @@ namespace DrivenDb
    //
    public interface IDbRecord
    {
-      int IdentityHash
-      {
-         get;
-      }
+      //int IdentityHash
+      //{
+      //   get;
+      //}
 
       object[] PrimaryKey
       {
@@ -95,8 +95,8 @@ namespace DrivenDb
       void Reset();
    }
 
-   public interface IDbRecord<T> : IDbRecord, IEquatable<T>, IComparable<T>
-   {
-      bool SameAs(T other);
-   }
+   //public interface IDbRecord<T> : IDbRecord, IEquatable<T>, IComparable<T>
+   //{
+   //   //bool SameAs(T other);
+   //}
 }

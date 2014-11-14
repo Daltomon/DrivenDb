@@ -114,7 +114,6 @@
     <Compile Include="Utility\DataRecord.cs" />
     <Compile Include="Utility\DisposableCollection.cs" />
     <Compile Include="Utility\Interfaces\IEntityAccessor.cs" />
-    <Compile Include="Utility\EntityHelper.cs" />
     <Compile Include="Utility\EntityAccessor.cs" />
     <Compile Include="DbFactory.cs" />
   </ItemGroup>

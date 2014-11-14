@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.Serialization;
 
 namespace DrivenDb
@@ -94,7 +93,7 @@ namespace DrivenDb
       {
          var result = new T();
 
-         result.Update(this.m_Instance, false);
+         result.Update(this.m_Instance); //, false);
 
          if (m_IdentityColumn.Value != null)
          {
@@ -117,7 +116,7 @@ namespace DrivenDb
       {
          var result = new T();
 
-         result.Update(this.m_Instance, false);
+         result.Update(this.m_Instance); //, false);
 
          if (m_IdentityColumn.Value != null)
          {
@@ -153,12 +152,12 @@ namespace DrivenDb
          }
       }
 
-      public void Update(T other, bool checkIdentity = true)
+      public void Update(T other) //, bool checkIdentity = true)
       {
-         if (checkIdentity && !this.Entity.SameAs(other))
-         {
-            throw new InvalidDataException("Cannot update mismatched records");
-         }
+         //if (checkIdentity && !this.Entity.SameAs(other))
+         //{
+         //   throw new InvalidDataException("Cannot update mismatched records");
+         //}
 
          var properties = m_Accessor.GetProperties();
 
@@ -206,12 +205,12 @@ namespace DrivenDb
          return result;
       }
 
-      void IDbEntity<T>.Merge(T other, bool checkIdentity)
+      public void Merge(T other) //, bool checkIdentity = true)
       {
-         if (checkIdentity && !this.Entity.SameAs(other))
-         {
-            throw new InvalidDataException("Cannot update mismatched records");
-         }
+         //if (checkIdentity && !this.Entity.SameAs(other))
+         //{
+         //   throw new InvalidDataException("Cannot update mismatched records");
+         //}
 
          var lastModified = m_LastModified;
          var lastUpdated = m_LastUpdated;

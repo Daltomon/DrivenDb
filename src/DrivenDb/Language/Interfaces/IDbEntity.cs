@@ -18,12 +18,12 @@ namespace DrivenDb
       void Undelete();
    }
 
-   public interface IDbEntity<T> : IDbEntity, IDbRecord<T>
+   public interface IDbEntity<T> : IDbEntity, IDbRecord //<T>
       where T : IDbEntity
    {
       T Clone();
 
-      void Update(T other, bool checkIdentity = true);
-      void Merge(T other, bool checkIdentity = true);
+      void Update(T other); //, bool checkIdentity = true);
+      void Merge(T other); //, bool checkIdentity = true);
    }
 }

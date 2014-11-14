@@ -73,9 +73,6 @@
     <Compile Include="..\..\DrivenDb\Utility\EntityAccessor.cs">
       <Link>Utility\EntityAccessor.cs</Link>
     </Compile>
-    <Compile Include="..\..\DrivenDb\Utility\EntityHelper.cs">
-      <Link>Utility\EntityHelper.cs</Link>
-    </Compile>
     <Compile Include="..\..\DrivenDb\Utility\Interfaces\IEntityAccessor.cs">
       <Link>Utility\Interfaces\IEntityAccessor.cs</Link>
     </Compile>

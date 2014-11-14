@@ -12,17 +12,6 @@
 
 using System;
 using System.Collections.Generic;
-
-//#if !PORTABLE
-
-//using System.Data.Linq.Mapping;
-
-//#endif
-//using System.Runtime.InteropServices;
-//#if PORTABLE
-//using System.IO;
-//#endif
-
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -34,13 +23,13 @@ namespace DrivenDb
    public delegate void StateChangedEvent(EntityState previous, EntityState current);
 
    [DataContract]
-   public abstract class DbRecord<T> : IDbRecord<T>
+   public abstract class DbRecord<T> : IDbRecord //: IDbRecord<T>
       where T : IDbRecord
    {
       protected static readonly EntityAccessor<T> m_Accessor = new EntityAccessor<T>(true);
-      private static readonly Func<T, T, int> m_CompareTo;
-      private static readonly Func<T, T, bool> m_Equals;
-      private static readonly Func<T, int> m_Hasher;
+      //private static readonly Func<T, T, int> m_CompareTo;
+      //private static readonly Func<T, T, bool> m_Equals;
+      //private static readonly Func<T, int> m_Hasher;
       private static readonly bool? m_IsIdentity32;
 
       protected static readonly DbTableAttribute m_Table;
@@ -69,9 +58,9 @@ namespace DrivenDb
             m_IsIdentity32 = m_Accessor.GetPropertyInfo(m_IdentityColumn.Key).PropertyType == typeof(int);
          }
 
-         m_CompareTo = EntityHelper.CompareTo<T>(m_PrimaryColumns.Select(p => p.Key)); // optional case sensitive?
-         m_Equals = EntityHelper.Equals<T>(m_PrimaryColumns.Select(p => p.Key)); // optional case sensitive?
-         m_Hasher = EntityHelper.GetHashCode<T>(m_PrimaryColumns.Select(p => p.Key));
+         //m_CompareTo = EntityHelper.CompareTo<T>(m_PrimaryColumns.Select(p => p.Key)); // optional case sensitive?
+         //m_Equals = EntityHelper.Equals<T>(m_PrimaryColumns.Select(p => p.Key)); // optional case sensitive?
+         //m_Hasher = EntityHelper.GetHashCode<T>(m_PrimaryColumns.Select(p => p.Key));
       }
 
       public event StateChangedEvent StateChanged;
@@ -92,7 +81,7 @@ namespace DrivenDb
       protected EntityState m_State;
 
       protected T m_Instance;
-      protected Lazy<int> m_Hash;
+      //protected Lazy<int> m_Hash;
 
       protected DbRecord()
       {
@@ -125,7 +114,7 @@ namespace DrivenDb
       private void Initialize()
       {
          m_Instance = (T) (object) this;
-         m_Hash = new Lazy<int>(() => m_Hasher(m_Instance));
+         //m_Hash = new Lazy<int>(() => m_Hasher(m_Instance));
       }
 
       private static DbTableAttribute GetTableAttribute(Type type)
@@ -226,10 +215,10 @@ namespace DrivenDb
          return columns;
       }
 
-      int IDbRecord.IdentityHash
-      {
-         get { return m_Hash.Value; }
-      }
+      //int IDbRecord.IdentityHash
+      //{
+      //   get { return m_Hash.Value; }
+      //}
 
       object[] IDbRecord.PrimaryKey
       {
@@ -336,27 +325,27 @@ namespace DrivenDb
          m_Changes.Clear();
       }
 
-      bool IDbRecord<T>.SameAs(T other)
-      {
-         return m_Hash.Value == other.IdentityHash && m_Equals(m_Instance, other);
-      }
+      //bool IDbRecord<T>.SameAs(T other)
+      //{
+      //   return m_Hash.Value == other.IdentityHash && m_Equals(m_Instance, other);
+      //}
 
-      bool IEquatable<T>.Equals(T other)
-      {
-         var value1 = m_State == EntityState.New && this.m_Hash.Value == default(int)
-            ? this.GetHashCode()
-            : m_Hash.Value;
+      //bool IEquatable<T>.Equals(T other)
+      //{
+      //   var value1 = m_State == EntityState.New && this.m_Hash.Value == default(int)
+      //      ? this.GetHashCode()
+      //      : m_Hash.Value;
 
-         var value2 = m_State == EntityState.New && this.m_Hash.Value == default(int)
-            ? other.GetHashCode()
-            : other.IdentityHash;
+      //   var value2 = m_State == EntityState.New && this.m_Hash.Value == default(int)
+      //      ? other.GetHashCode()
+      //      : other.IdentityHash;
 
-         return value1 == value2 && m_Equals(m_Instance, other);
-      }
+      //   return value1 == value2 && m_Equals(m_Instance, other);
+      //}
 
-      int IComparable<T>.CompareTo(T other)
-      {
-         return m_CompareTo(this.m_Instance, other);
-      }
+      //int IComparable<T>.CompareTo(T other)
+      //{
+      //   return m_CompareTo(this.m_Instance, other);
+      //}
    }
 }

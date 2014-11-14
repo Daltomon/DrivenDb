@@ -46,48 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\DrivenDb\Collections\DbCache.cs">
-      <Link>Collections\DbCache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\DbCollectionExtensions.cs">
-      <Link>Collections\DbCollectionExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\DbIndex.cs">
-      <Link>Collections\DbIndex.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\DbIndexChangeEventArgs.cs">
-      <Link>Collections\DbIndexChangeEventArgs.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\DbIndexCore.cs">
-      <Link>Collections\DbIndexCore.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\DbView.cs">
-      <Link>Collections\DbView.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\EntityComparer.cs">
-      <Link>Collections\EntityComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\IndexAdditionMethod.cs">
-      <Link>Collections\IndexAdditionMethod.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\Interfaces\IDbCache.cs">
-      <Link>Collections\Interfaces\IDbCache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\Interfaces\IDbCacheCore.cs">
-      <Link>Collections\Interfaces\IDbCacheCore.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\Interfaces\IDbIndex.cs">
-      <Link>Collections\Interfaces\IDbIndex.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\Interfaces\IDbIndexCore.cs">
-      <Link>Collections\Interfaces\IDbIndexCore.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\Interfaces\IDbView.cs">
-      <Link>Collections\Interfaces\IDbView.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Collections\Interfaces\INotifyingDbView.cs">
-      <Link>Collections\Interfaces\INotifyingDbView.cs</Link>
-    </Compile>
     <Compile Include="..\..\DrivenDb\DbFactory.cs">
       <Link>DbFactory.cs</Link>
     </Compile>
@@ -261,15 +219,6 @@
     </Compile>
     <Compile Include="..\..\DrivenDb\Utility\DisposableCollection.cs">
       <Link>Utility\DisposableCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Utility\Weak.cs">
-      <Link>Utility\Weak.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Utility\WeakEqualityComparer.cs">
-      <Link>Utility\WeakEqualityComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Utility\WeakEventManager.cs">
-      <Link>Utility\WeakEventManager.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -46,21 +46,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\DbCache.cs" />
-    <Compile Include="Collections\DbIndexChangeEventArgs.cs" />
-    <Compile Include="Collections\DbIndexCore.cs" />
-    <Compile Include="Collections\DbView.cs" />
-    <Compile Include="Collections\EntityComparer.cs" />
-    <Compile Include="Collections\IndexAdditionMethod.cs" />
-    <Compile Include="Collections\Interfaces\IDbCache.cs" />
-    <Compile Include="Collections\Interfaces\IDbCacheCore.cs" />
-    <Compile Include="Collections\Interfaces\IDbIndexCore.cs" />
-    <Compile Include="Collections\Interfaces\IDbView.cs" />
-    <Compile Include="Collections\Interfaces\INotifyingDbView.cs" />
     <Compile Include="Language\AccessorExtensions.cs" />
-    <Compile Include="Collections\Interfaces\IDbIndex.cs" />
-    <Compile Include="Collections\DbCollectionExtensions.cs" />
-    <Compile Include="Collections\DbIndex.cs" />
     <Compile Include="Language\Attributes\DbForeignAttribute.cs" />
     <Compile Include="Language\Attributes\DbColumnAttribute.cs" />
     <Compile Include="Language\Attributes\DbPrimaryAttribute.cs" />
@@ -131,9 +117,6 @@
     <Compile Include="Utility\EntityHelper.cs" />
     <Compile Include="Utility\EntityAccessor.cs" />
     <Compile Include="DbFactory.cs" />
-    <Compile Include="Utility\Weak.cs" />
-    <Compile Include="Utility\WeakEqualityComparer.cs" />
-    <Compile Include="Utility\WeakEventManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DrivenDb.snk" />

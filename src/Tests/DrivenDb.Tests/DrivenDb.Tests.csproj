@@ -90,19 +90,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\DbViewTests.cs" />
-    <Compile Include="Collections\Interfaces\IDbIndexTests.cs" />
-    <Compile Include="Collections\Interfaces\IDbViewTests.cs" />
     <Compile Include="Language\Base\DbAggregatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Language\Interfaces\IDbAccessorTests.cs" />
     <Compile Include="Language\DbChangeTests.cs" />
     <Compile Include="Language\DbEntityTests.cs" />
-    <Compile Include="Collections\DbIndexTests.cs" />
-    <Compile Include="Utility\EntityComparerTests.cs" />
-    <Compile Include="Utility\WeakEqualityComparerTests.cs" />
-    <Compile Include="Utility\WeakEventManagerTests.cs" />
-    <Compile Include="Utility\WeakTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

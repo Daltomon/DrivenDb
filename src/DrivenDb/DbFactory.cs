@@ -16,7 +16,6 @@ using DrivenDb.Base;
 using DrivenDb.MsSql;
 using DrivenDb.SqLite;
 using DrivenDb.MySql;
-using DrivenDb.Collections;
 using DrivenDb.Oracle;
 
 namespace DrivenDb
@@ -110,24 +109,6 @@ namespace DrivenDb
          var aggregator = new DbAggregator();
 
          return new DbAccessor(new DbScripter(db, new ValueJoiner(), builder), new DbMapper(db), new Db(extensions, connections), aggregator);
-      }
-
-      public static IDbIndex<K, T> CreateIndex<K, T>(IDbIndexCore<K, T> core)
-          where T : class, IDbEntity<T>
-      {
-         return new DbIndex<K, T>(core);
-      }
-
-      public static IDbIndex<K, T> CreateIndex<K, T>(Func<T, K> extractor)
-          where T : class, IDbEntity<T>
-      {
-         return new DbIndex<K, T>(new DbIndexCore<K, T>(extractor));
-      }
-
-      public static IDbCache<K, T, I> CreateCache<K, T, I>(IDbCacheCore<K, T, I> core)
-          where T : class, IDbEntity<T>
-      {
-         return new DbCache<K, T, I>(core);
       }
    }
 }

@@ -84,18 +84,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\DrivenDb.Tests\Collections\DbIndexTests.cs">
-      <Link>Collections\DbIndexTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Collections\DbViewTests.cs">
-      <Link>Collections\DbViewTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Collections\Interfaces\IDbIndexTests.cs">
-      <Link>Collections\Interfaces\IDbIndexTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Collections\Interfaces\IDbViewTests.cs">
-      <Link>Collections\Interfaces\IDbViewTests.cs</Link>
-    </Compile>
     <Compile Include="..\DrivenDb.Tests\Language\DbChangeTests.cs">
       <Link>Language\DbChangeTests.cs</Link>
     </Compile>
@@ -104,18 +92,6 @@
     </Compile>
     <Compile Include="..\DrivenDb.Tests\Language\Interfaces\IDbAccessorTests.cs">
       <Link>Language\Interfaces\IDbAccessorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Utility\EntityComparerTests.cs">
-      <Link>Utility\EntityComparerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Utility\WeakEqualityComparerTests.cs">
-      <Link>Utility\WeakEqualityComparerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Utility\WeakEventManagerTests.cs">
-      <Link>Utility\WeakEventManagerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\DrivenDb.Tests\Utility\WeakTests.cs">
-      <Link>Utility\WeakTests.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

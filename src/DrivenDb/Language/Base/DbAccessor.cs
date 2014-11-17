@@ -10,7 +10,6 @@
  * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
  **************************************************************************************/
 
-using DrivenDb.Language.Base;
 using DrivenDb.Utility;
 using System;
 using System.Collections.Generic;
@@ -22,17 +21,15 @@ namespace DrivenDb.Base
 {
    internal class DbAccessor : IDbAccessor
    {      
-      private readonly IDb m_Db;
-      private readonly IDbAggregator m_Aggregator;
+      private readonly IDb m_Db;      
       private readonly IDbMapper m_Mapper;
       private readonly IDbScripter m_Scripter;
 
-      public DbAccessor(IDbScripter scripter, IDbMapper mapper, IDb db, IDbAggregator aggregator)
+      public DbAccessor(IDbScripter scripter, IDbMapper mapper, IDb db)
       {
          m_Scripter = scripter;
          m_Mapper = mapper;
          m_Db = db;
-         m_Aggregator = aggregator;
 
          CommandTimeout = 600; // ten minutes
       }
@@ -229,9 +226,9 @@ namespace DrivenDb.Base
 
             using (var reader = command.ExecuteReader())
             {
-               var set1 = m_Mapper.ParallelMapEntities<T1>(command.CommandText, reader);
+               var set1 = m_Mapper.MapEntities<T1>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(2, 1);
-               var set2 = m_Mapper.ParallelMapEntities<T2>(command.CommandText, reader);
+               var set2 = m_Mapper.MapEntities<T2>(command.CommandText, reader);
 
                return new DbSet<T1, T2>(set1, set2);
             }
@@ -255,11 +252,11 @@ namespace DrivenDb.Base
 
             using (var reader = command.ExecuteReader())
             {
-               var set1 = m_Mapper.ParallelMapEntities<T1>(command.CommandText, reader);
+               var set1 = m_Mapper.MapEntities<T1>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(3, 1);
-               var set2 = m_Mapper.ParallelMapEntities<T2>(command.CommandText, reader);
+               var set2 = m_Mapper.MapEntities<T2>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(3, 2);
-               var set3 = m_Mapper.ParallelMapEntities<T3>(command.CommandText, reader);
+               var set3 = m_Mapper.MapEntities<T3>(command.CommandText, reader);
 
                return new DbSet<T1, T2, T3>(set1, set2, set3);
             }
@@ -284,13 +281,13 @@ namespace DrivenDb.Base
 
             using (var reader = command.ExecuteReader())
             {
-               var set1 = m_Mapper.ParallelMapEntities<T1>(command.CommandText, reader);
+               var set1 = m_Mapper.MapEntities<T1>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(4, 1);
-               var set2 = m_Mapper.ParallelMapEntities<T2>(command.CommandText, reader);
+               var set2 = m_Mapper.MapEntities<T2>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(4, 2);
-               var set3 = m_Mapper.ParallelMapEntities<T3>(command.CommandText, reader);
+               var set3 = m_Mapper.MapEntities<T3>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(4, 3);
-               var set4 = m_Mapper.ParallelMapEntities<T4>(command.CommandText, reader);
+               var set4 = m_Mapper.MapEntities<T4>(command.CommandText, reader);
 
                return new DbSet<T1, T2, T3, T4>(set1, set2, set3, set4);
             }
@@ -316,15 +313,15 @@ namespace DrivenDb.Base
 
             using (var reader = command.ExecuteReader())
             {
-               var set1 = m_Mapper.ParallelMapEntities<T1>(command.CommandText, reader);
+               var set1 = m_Mapper.MapEntities<T1>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(5, 1);
-               var set2 = m_Mapper.ParallelMapEntities<T2>(command.CommandText, reader);
+               var set2 = m_Mapper.MapEntities<T2>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(5, 2);
-               var set3 = m_Mapper.ParallelMapEntities<T3>(command.CommandText, reader);
+               var set3 = m_Mapper.MapEntities<T3>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(5, 3);
-               var set4 = m_Mapper.ParallelMapEntities<T4>(command.CommandText, reader);
+               var set4 = m_Mapper.MapEntities<T4>(command.CommandText, reader);
                if (!reader.NextResult()) throw new MissingResultException(5, 4);
-               var set5 = m_Mapper.ParallelMapEntities<T5>(command.CommandText, reader);
+               var set5 = m_Mapper.MapEntities<T5>(command.CommandText, reader);
 
                return new DbSet<T1, T2, T3, T4, T5>(set1, set2, set3, set4, set5);
             }
@@ -350,17 +347,7 @@ namespace DrivenDb.Base
       {
          WriteEntities(null, null, entities, null, null, null, null, returnIds);
       }
-
-      public void WriteAggregate(IDbAggregate aggregate)
-      {
-         m_Aggregator.WriteAggregate(this, aggregate);
-      }
-
-      public void WriteAggregates(IEnumerable<IDbAggregate> aggregates)
-      {
-         m_Aggregator.WriteAggregates(this, aggregates);
-      }
-
+      
       internal void TransactEntity<T>(IDbConnection connection, IDbTransaction transaction, T entity, bool returnId)
          where T : IDbRecord
       {
@@ -603,11 +590,6 @@ namespace DrivenDb.Base
       {
           get;
           set;
-      }
-
-      IFallbackAccessorSlim IDbAccessorSlim.Fallback
-      {
-         get { return new FallbackAccessorSlim(this); }
       }
 
       public IDbScope CreateScope()

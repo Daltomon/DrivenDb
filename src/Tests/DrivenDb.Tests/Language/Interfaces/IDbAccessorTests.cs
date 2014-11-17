@@ -119,58 +119,6 @@ namespace DrivenDb.Tests.Language.Interfaces
       }
 
       [Fact]
-      public void FallbackReadEntitiesWithNullTest()
-      {
-         string key;
-
-         var accessor = CreateAccessor(out key);
-         var entities = accessor.Fallback.ReadEntities<MyTable>(
-            "SELECT * FROM MyTable WHERE MyIdentity IN (@0)"
-            , default(int[])
-            ).ToArray();
-
-         Assert.True(entities.Length == 0);
-
-         DestroyAccessor(key);
-      }
-
-      [Fact]
-      public void FallbackReadEntitiesWithoutValuesTest()
-      {
-         string key;
-
-         var accessor = CreateAccessor(out key);
-         var identities = new int[0];
-
-         var entities = accessor.Fallback.ReadEntities<MyTable>(
-            "SELECT * FROM MyTable WHERE MyIdentity IN (@0)"
-            , identities
-            ).ToArray();
-
-         Assert.True(entities.Length == 0);
-
-         DestroyAccessor(key);
-      }
-
-      [Fact]
-      public void FallbackReadEntitiesWithValuesTest()
-      {
-         string key;
-
-         var accessor = CreateAccessor(out key);
-         var identities = new[] { 1, 2, 3 };
-
-         var entities = accessor.Fallback.ReadEntities<MyTable>(
-            "SELECT * FROM MyTable WHERE MyIdentity IN (@0)"
-            , identities
-            ).ToArray();
-
-         Assert.True(entities.Length == 3);
-
-         DestroyAccessor(key);
-      }
-
-      [Fact]
       public void Partial_PropertiesWithoutColumnAttributesWillBeScriptedIntoSql()
       {
          string key;

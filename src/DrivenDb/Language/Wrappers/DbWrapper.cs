@@ -16,11 +16,11 @@ using System.IO;
 
 namespace DrivenDb.Wrappers
 {
-   public class DbWrapper : IDbAccessor
+   public abstract class DbWrapper : IDbAccessor
    {
       private readonly IDbAccessor m_Accessor;
 
-      public DbWrapper(IDbAccessor accessor)
+      protected DbWrapper(IDbAccessor accessor)
       {
          m_Accessor = accessor;
       }
@@ -161,14 +161,6 @@ namespace DrivenDb.Wrappers
          where T5 : IDbRecord, new()
       {
          return m_Accessor.ReadEntities<T1, T2, T3, T4, T5>(query, parameters);
-      }
-      
-      public IFallbackAccessorSlim Fallback
-      {
-         get { return m_Accessor.Fallback; }
-         // ReSharper disable ValueParameterNotUsed
-         private set { }
-         // ReSharper restore ValueParameterNotUsed
-      }
+      }      
    }
 }

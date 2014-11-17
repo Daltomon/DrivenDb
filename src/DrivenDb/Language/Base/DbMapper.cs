@@ -166,44 +166,47 @@ namespace DrivenDb.Base
          return result;
       }
 
-      public Task<IEnumerable<T>> ParallelMapEntities<T>(string query, IDataReader reader)
-         where T : IDbRecord, new()
-      {
-         var mapper = GetDeserializer<T>(query, reader);
-         var names = new List<String>();
+      // TODO: there are several strategies possible here and it doesnt seem appropriate to assume
+      //       any of them.  there needs to be a declarative way to require a specific strategy
+      //       for a specific query.
+      //public Task<IEnumerable<T>> ParallelMapEntities<T>(string query, IDataReader reader)
+      //   where T : IDbRecord, new()
+      //{
+      //   var mapper = GetDeserializer<T>(query, reader);
+      //   var names = new List<String>();
 
-         for (var i = 0; i < reader.FieldCount; i++)
-         {
-            names.Add(reader.GetName(i));
-         }
+      //   for (var i = 0; i < reader.FieldCount; i++)
+      //   {
+      //      names.Add(reader.GetName(i));
+      //   }
 
-         var holders = new List<DataHolder<T>>();
+      //   var holders = new List<DataHolder<T>>();
 
-         while (reader.Read())
-         {
-            var values = new object[reader.FieldCount];
+      //   while (reader.Read())
+      //   {
+      //      var values = new object[reader.FieldCount];
 
-            reader.GetValues(values);
-            holders.Add(new DataHolder<T>() {DataRecord = new DataRecord(names, values)});
-         }
+      //      reader.GetValues(values);
+      //      holders.Add(new DataHolder<T>() {DataRecord = new DataRecord(names, values)});
+      //   }
 
-         //TODO: based on size of holders choose different strategies
+      //   //TODO: based on size of holders choose different strategies
 
-         return Task.Factory.StartNew<IEnumerable<T>>(() =>
-            {
-               foreach (var h in holders)
-               {
-                  var gnu = new T();
+      //   return Task.Factory.StartNew<IEnumerable<T>>(() =>
+      //      {
+      //         foreach (var h in holders)
+      //         {
+      //            var gnu = new T();
 
-                  mapper(h.DataRecord, gnu);
+      //            mapper(h.DataRecord, gnu);
 
-                  h.Entity = gnu;
-                  h.Entity.Reset();
-               }
+      //            h.Entity = gnu;
+      //            h.Entity.Reset();
+      //         }
 
-               return holders.Select(h => h.Entity).ToArray();
-            });
-      }
+      //         return holders.Select(h => h.Entity).ToArray();
+      //      });
+      //}
 
       public IEnumerable<T> MapType<T>(string query, IDataReader reader)
          where T : new()

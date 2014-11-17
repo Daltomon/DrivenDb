@@ -23,8 +23,8 @@ namespace DrivenDb.MsSql
       private readonly IMsSqlScripter m_Scripter;
       private readonly IDb m_Db;
 
-      public MsSqlAccessor(IMsSqlScripter scripter, IDbMapper mapper, IDb db, IDbAggregator aggregator)
-         : base(scripter, mapper, db, aggregator)
+      public MsSqlAccessor(IMsSqlScripter scripter, IDbMapper mapper, IDb db)
+         : base(scripter, mapper, db)
       {
          m_Scripter = scripter;
          m_Db = db;

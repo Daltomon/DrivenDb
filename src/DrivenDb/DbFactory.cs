@@ -24,8 +24,7 @@ namespace DrivenDb
    public static class DbFactory
    {
       public static IDbAccessor CreateAccessor(DbAccessorType type, IDb db)
-      {
-         var aggregator = new DbAggregator();
+      {         
          var mapper = new DbMapper(db);
 
          Func<ISqlBuilder> builders;
@@ -40,7 +39,7 @@ namespace DrivenDb
                   var msjoiner = new MsSqlValueJoiner();
                   var msscripter = new MsSqlScripter(db, msjoiner, msbuilders);
 
-                  return new MsSqlAccessor(msscripter, mapper, db, aggregator);
+                  return new MsSqlAccessor(msscripter, mapper, db);
                }
             case DbAccessorType.SqLite:
                {
@@ -66,7 +65,7 @@ namespace DrivenDb
 
          var scripter = new DbScripter(db, joiner, builders);
 
-         return new DbAccessor(scripter, mapper, db, aggregator);
+         return new DbAccessor(scripter, mapper, db);
       }
 
       public static IDbAccessor CreateAccessor(DbAccessorType type, Func<IDbConnection> connections)
@@ -83,9 +82,8 @@ namespace DrivenDb
       {
 
          var db = new Db(extensions, connections);
-         var aggregator = new DbAggregator();
 
-         return new DbAccessor(new DbScripter(db, new ValueJoiner(), builder), new DbMapper(db), db, aggregator);
+         return new DbAccessor(new DbScripter(db, new ValueJoiner(), builder), new DbMapper(db), db);
       }
 
       public static IDbAccessorSlim CreateSlimAccessor(DbAccessorType type, IDb db)
@@ -106,9 +104,8 @@ namespace DrivenDb
       public static IDbAccessorSlim CreateSlimAccessor(Func<ISqlBuilder> builder, AccessorExtension extensions, Func<IDbConnection> connections)
       {
          var db = new Db(extensions, connections);
-         var aggregator = new DbAggregator();
 
-         return new DbAccessor(new DbScripter(db, new ValueJoiner(), builder), new DbMapper(db), new Db(extensions, connections), aggregator);
+         return new DbAccessor(new DbScripter(db, new ValueJoiner(), builder), new DbMapper(db), new Db(extensions, connections));
       }
    }
 }

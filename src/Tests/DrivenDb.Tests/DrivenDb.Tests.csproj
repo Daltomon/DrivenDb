@@ -90,7 +90,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Language\Base\DbAggregatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Language\Interfaces\IDbAccessorTests.cs" />
     <Compile Include="Language\DbChangeTests.cs" />

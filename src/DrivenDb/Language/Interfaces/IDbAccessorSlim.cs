@@ -65,10 +65,5 @@ namespace DrivenDb
          get;
          set;
       }
-
-      IFallbackAccessorSlim Fallback
-      {
-         get;
-      }      
    }
 }

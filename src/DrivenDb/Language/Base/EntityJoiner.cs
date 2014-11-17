@@ -19,9 +19,7 @@ namespace DrivenDb.Base
    internal class EntityJoiner<P, C> : IWhereJoinable<P, C>, IEqualsJoinable<C>, IOnJoiner<P, C>
       where P : IDbRecord, new()
       where C : IDbRecord, new()
-   {
-      //private const int TEN_MINUTES = 600;
-
+   {      
       private readonly int _timeout;
       private readonly IDb m_Db;
       private readonly IEnumerable<P> m_Instances;

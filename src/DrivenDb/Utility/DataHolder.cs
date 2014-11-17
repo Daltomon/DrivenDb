@@ -10,13 +10,17 @@
  * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE. 
  **************************************************************************************/
 
-using System.Data;
+/* NOTE: this might get pulled back out, pending the decision on the current parallel 
+ *       mapping routine
+ */
 
-namespace DrivenDb.Utility
-{
-   class DataHolder<T>
-   {
-      public IDataRecord DataRecord;
-      public T Entity;
-   }
-}
+//using System.Data;
+
+//namespace DrivenDb.Utility
+//{
+//   class DataHolder<T>
+//   {
+//      public IDataRecord DataRecord;
+//      public T Entity;
+//   }
+//}

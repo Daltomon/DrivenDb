@@ -48,20 +48,15 @@
   <ItemGroup>
     <Compile Include="Language\AccessorExtensions.cs" />
     <Compile Include="Language\AttributeHelper.cs" />
-    <Compile Include="Language\Attributes\DbForeignAttribute.cs" />
     <Compile Include="Language\Attributes\DbColumnAttribute.cs" />
     <Compile Include="Language\Attributes\DbPrimaryAttribute.cs" />
     <Compile Include="Language\Attributes\DbSequenceAttribute.cs" />
     <Compile Include="Language\Attributes\DbTableAttribute.cs" />
-    <Compile Include="Language\Base\DbAggregator.cs" />
     <Compile Include="Language\Base\EntityJoiner.cs" />
     <Compile Include="Language\Base\DbAccessor.cs" />
     <Compile Include="Language\Base\DbMapper.cs" />
     <Compile Include="Language\Base\DbScripter.cs" />
-    <Compile Include="Language\Base\FallbackAccessorSlim.cs" />
     <Compile Include="Language\Exceptions\InvalidAggregateStructure.cs" />
-    <Compile Include="Language\Interfaces\IDbAggregate.cs" />
-    <Compile Include="Language\Interfaces\IDbAggregator.cs" />
     <Compile Include="Language\Interfaces\IDbScope.cs" />
     <Compile Include="Language\Base\SqlBuilder.cs" />
     <Compile Include="Language\Base\ValueJoiner.cs" />
@@ -75,7 +70,6 @@
     <Compile Include="Language\Interfaces\IDbMonitor.cs" />
     <Compile Include="Language\Interfaces\IEqualsJoinable.cs" />
     <Compile Include="Language\Interfaces\IOnJoiner.cs" />
-    <Compile Include="Language\Interfaces\IFallbackAccessorSlim.cs" />
     <Compile Include="Language\Interfaces\ISqlBuilder.cs" />
     <Compile Include="Language\Interfaces\IValueJoiner.cs" />
     <Compile Include="Language\Interfaces\IDbAccessor.cs" />

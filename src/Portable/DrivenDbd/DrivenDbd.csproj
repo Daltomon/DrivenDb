@@ -52,17 +52,11 @@
     <Compile Include="..\..\DrivenDb\Language\AccessorExtensions.cs">
       <Link>Language\AccessorExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Attributes\DbForeignAttribute.cs">
-      <Link>Language\Attributes\DbForeignAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\DrivenDb\Language\Attributes\DbPrimaryAttribute.cs">
       <Link>Language\Attributes\DbPrimaryAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Base\DbAccessor.cs">
       <Link>Language\Base\DbAccessor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Base\DbAggregator.cs">
-      <Link>Language\Base\DbAggregator.cs</Link>
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Base\DbMapper.cs">
       <Link>Language\Base\DbMapper.cs</Link>
@@ -75,9 +69,6 @@
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Base\EntityJoiner.cs">
       <Link>Language\Base\EntityJoiner.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Base\FallbackAccessorSlim.cs">
-      <Link>Language\Base\FallbackAccessorSlim.cs</Link>
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Base\SqlBuilder.cs">
       <Link>Language\Base\SqlBuilder.cs</Link>
@@ -121,12 +112,6 @@
     <Compile Include="..\..\DrivenDb\Language\Interfaces\IDbAccessorSlim.cs">
       <Link>Language\Interfaces\IDbAccessorSlim.cs</Link>
     </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Interfaces\IDbAggregate.cs">
-      <Link>Language\Interfaces\IDbAggregate.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Interfaces\IDbAggregator.cs">
-      <Link>Language\Interfaces\IDbAggregator.cs</Link>
-    </Compile>
     <Compile Include="..\..\DrivenDb\Language\Interfaces\IDbMapper.cs">
       <Link>Language\Interfaces\IDbMapper.cs</Link>
     </Compile>
@@ -141,9 +126,6 @@
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Interfaces\IEqualsJoinable.cs">
       <Link>Language\Interfaces\IEqualsJoinable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\DrivenDb\Language\Interfaces\IFallbackAccessorSlim.cs">
-      <Link>Language\Interfaces\IFallbackAccessorSlim.cs</Link>
     </Compile>
     <Compile Include="..\..\DrivenDb\Language\Interfaces\IOnJoiner.cs">
       <Link>Language\Interfaces\IOnJoiner.cs</Link>

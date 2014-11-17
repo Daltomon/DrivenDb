@@ -33,8 +33,8 @@ namespace DrivenDb
 
       IEnumerable<T> MapAnonymous<T>(T model, string query, IDataReader reader);
 
-      Task<IEnumerable<T>> ParallelMapEntities<T>(string query, IDataReader reader)
-         where T : IDbRecord, new();
+      //Task<IEnumerable<T>> ParallelMapEntities<T>(string query, IDataReader reader)
+      //   where T : IDbRecord, new();
 
       IEnumerable<T> MapType<T>(string query, IDataReader reader)
          where T : new();

@@ -16,7 +16,11 @@ ECHO.
 
 IF "%PUBLISH%" == "y" (
 	ECHO Publishing to Nuget...
+<<<<<<< HEAD
 	NuGet Push .\release\DrivenDb.2.0.nupkg
+=======
+	NuGet Push .\release\DrivenDb.1.17.nupkg
+>>>>>>> origin/master
 	ECHO Publish complete.
 ) ELSE (
 	ECHO Publish cancelled.

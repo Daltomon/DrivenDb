@@ -70,6 +70,10 @@
     <Compile Include="Language\Interfaces\IDbMonitor.cs" />
     <Compile Include="Language\Interfaces\IEqualsJoinable.cs" />
     <Compile Include="Language\Interfaces\IOnJoiner.cs" />
+    <Compile Include="Language\Interfaces\IParallelAccessor.cs" />
+    <Compile Include="Language\Interfaces\IParallelAccessorSlim.cs" />
+    <Compile Include="Language\Interfaces\IFallbackAccessorSlim.cs" />
+    <Compile Include="Language\Interfaces\IParamConvertible.cs" />
     <Compile Include="Language\Interfaces\ISqlBuilder.cs" />
     <Compile Include="Language\Interfaces\IValueJoiner.cs" />
     <Compile Include="Language\Interfaces\IDbAccessor.cs" />

@@ -19,7 +19,7 @@ IF "%PUBLISH%" == "y" (
 <<<<<<< HEAD
 	NuGet Push .\release\DrivenDb.2.0.nupkg
 =======
-	NuGet Push .\release\DrivenDb.1.17.nupkg
+	NuGet Push .\release\DrivenDb.2.0.nupkg
 >>>>>>> origin/master
 	ECHO Publish complete.
 ) ELSE (

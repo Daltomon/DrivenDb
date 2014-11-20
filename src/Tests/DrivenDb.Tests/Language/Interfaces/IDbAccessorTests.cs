@@ -778,7 +778,7 @@ namespace DrivenDb.Tests.Language.Interfaces
                MyString = "Seven"
             };
 
-         accessor.WriteEntities(new IDbEntity[] { gnutable1, gnufriend1, gnutable2, gnutrigger1, gnufriend2, gnutrigger2 });
+         accessor.WriteEntities(new IDbRecord[] { gnutable1, gnufriend1, gnutable2, gnutrigger1, gnufriend2, gnutrigger2 });
 
          Assert.True(gnutable1.MyIdentity == 4);
          Assert.True(gnufriend1.MyIdentity == 1);
